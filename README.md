@@ -1,10 +1,9 @@
 # Tech Stack
 
-- Node.js
-- SQLite
-- HTMX
-- Pure CSS
-- Vanilla JavaScript
+- Web Server: Node.js + Express
+- Database: SQLite
+- Front-end: HTMX + Pure CSS + Vanilla JavaScript
+- Infra: Undefined
 
 # Development
 
