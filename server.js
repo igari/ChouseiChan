@@ -16,6 +16,15 @@ const db = new sqlite3.Database("./database.sqlite", (err) => {
     return console.error(err.message);
   }
   console.log("Connected to the SQLite database.");
+
+  // Enable foreign key constraint
+  db.run("PRAGMA foreign_keys = ON", (err) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      console.log("Foreign key constraint enabled.");
+    }
+  });
 });
 
 // Middleware to parse JSON and urlencoded data

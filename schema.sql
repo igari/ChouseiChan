@@ -31,4 +31,3 @@ CREATE TABLE IF NOT EXISTS participant_responses (
 );
 CREATE INDEX IF NOT EXISTS idx_events_created_at ON events(created_at);
 CREATE INDEX IF NOT EXISTS idx_participants_event_id ON participants(event_id);
-PRAGMA foreign_keys = ON
