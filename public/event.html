@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Scheduling Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="schedule.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>調整ちゃん</h1>
+    </header>
+    <main>
+        <section id="schedule-form">
+            <form hx-post="/create-schedule" hx-target="#schedule-list" hx-swap="outerHTML">
+                <div>
+                    <label for="event-name">Event Name:</label>
+                    <input type="text" id="event-name" name="event_name" required>
+                </div>
+                <div>
+                    <label for="event-date">Event Date:</label>
+                    <input type="date" id="event-date" name="event_date" required>
+                </div>
+                <div>
+                    <label for="event-time">Event Time:</label>
+                    <input type="time" id="event-time" name="event_time" required>
+                </div>
+                <button type="submit">Create Event</button>
+            </form>
+        </section>
+        <section id="schedule-list">
+            <!-- This section will be populated with the schedule list from the server -->
+        </section>
+    </main>
+</body>
+</html>

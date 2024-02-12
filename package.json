@@ -1,0 +1,20 @@
+{
+    "name": "schedule-app",
+    "private": true,
+    "version": "1.0.0",
+    "description": "A simple scheduling application",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "express": "^4.17.1",
+        "sqlite": "^4.0.19",
+        "sqlite3": "^5.0.0",
+        "uuid": "^9.0.1"
+    },
+    "engines": {
+        "node": ">=10.0.0"
+    }
+}

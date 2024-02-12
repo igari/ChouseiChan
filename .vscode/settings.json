@@ -1,0 +1,4 @@
+{
+  "eslint.format.enable": true,
+  "cSpell.words": ["AUTOINCREMENT", "datetime", "htmx", "uuidv"]
+}
