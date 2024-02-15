@@ -1,4 +1,7 @@
 {
   "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
   "cSpell.words": ["AUTOINCREMENT", "datetime", "htmx", "uuidv"]
 }

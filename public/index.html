@@ -20,10 +20,10 @@
     </header>
     <main>
         <section id="schedule-form">
-            <form hx-post="/create-event" hx-target="#schedule-list" hx-swap="outerHTML">
+            <form hx-post="http://127.0.0.1:5001/itsusuru-686b1/us-central1/createEvent" hx-target="#schedule-list" hx-swap="outerHTML">
                 <div>
                     <label for="event-name">Event Name:</label>
-                    <input type="text" id="event-name" name="event_name" required>
+                    <input type="text" id="event-name" name="name" required>
                 </div>
                 <div>
                     <label for="datepicker">Event Date:</label>
@@ -32,13 +32,16 @@
                 <button type="submit">Create Event</button>
             </form>
         </section>
+        <section>
+            <button hx-get="http://127.0.0.1:5001/itsusuru-686b1/us-central1/helloWorld" hx-target="#schedule-list" hx-swap="outerHTML">button</button>
+        </section>
         <section id="schedule-list">
             <!-- This section will be populated with the schedule list from the server -->
         </section>
     </main>
 
     <script>
-        flatpickr("#datepicker", {
+        window.flatpickr = flatpickr("#datepicker", {
             inline: true,
             mode: 'multiple',
             defaultHour: 19,

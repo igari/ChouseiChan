@@ -1,20 +1,32 @@
 {
-    "name": "schedule-app",
+    "name": "itsusuru",
     "private": true,
     "version": "1.0.0",
-    "description": "A simple scheduling application",
+    "description": "イツスル | 日程調整をもっとカンタンにする",
+    "type": "module",
     "main": "server.js",
     "scripts": {
         "start": "node server.js"
     },
     "dependencies": {
+        "@google-cloud/firestore": "^7.3.0",
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
+        "firebase": "^10.8.0",
+        "firebase-admin": "^12.0.0",
+        "firebase-functions": "^4.7.0",
         "sqlite": "^4.0.19",
         "sqlite3": "^5.0.0",
         "uuid": "^9.0.1"
     },
     "engines": {
         "node": ">=10.0.0"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^7.0.1",
+        "@typescript-eslint/parser": "^7.0.1",
+        "eslint": "^8.56.0",
+        "eslint-plugin-unused-imports": "^3.1.0",
+        "typescript-eslint": "^7.0.1"
     }
 }
