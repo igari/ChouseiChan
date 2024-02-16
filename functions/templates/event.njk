@@ -1,0 +1,53 @@
+<main>
+  <h1>{{ name }}</h1>
+  <section>
+    <label>みんなにURLを共有しよう</label>
+    <input type="text" readonly value="{{ currentURL }}" />
+  </section>
+  <form
+    hx-post="http://127.0.0.1:5001/itsusuru-686b1/us-central1/responseEvent"
+  >
+    <section>
+      <input type="text" name="name" placeholder="名前を入力してね" required />
+    </section>
+    <section>
+      <ul class="candidate-date">
+        {% for c in candidateDates %}
+        <li>
+          <time datetime="{{ c.date }}T{{ c.time }}"
+            >{{ c.date }} {{ c.time }}</time
+          >
+          <ul>
+            <li>
+              <input
+                type="radio"
+                name="responses[{{ c.date }}T{{ c.time }}]"
+                value="YES"
+              />◯
+            </li>
+            <li>
+              <input
+                type="radio"
+                name="responses[{{ c.date }}T{{ c.time }}]"
+                value="MAYBE"
+              />△
+            </li>
+            <li>
+              <input
+                type="radio"
+                name="responses[{{ c.date }}T{{ c.time }}]"
+                value="NO"
+                checked
+              />✕
+            </li>
+          </ul>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    <footer>
+      <button type="submit">送信</button>
+    </footer>
+    <input type="hidden" name="eventId" value="{{ eventId }}" />
+  </form>
+</main>

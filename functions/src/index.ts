@@ -1,43 +1,143 @@
-import { logger } from 'firebase-functions';
-import { onRequest } from 'firebase-functions/v2/https';
+// import { logger } from 'firebase-functions';
+import { onRequest } from 'firebase-functions/v2/https'
 
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
-import { initializeApp } from 'firebase-admin/app';
+import path from 'node:path'
+import { getFirestore, FieldValue } from 'firebase-admin/firestore'
+import { initializeApp } from 'firebase-admin/app'
+import {
+  CreateEventRequestParams,
+  EventData,
+  ParticipantData,
+  ResponseEventRequestParams,
+} from './type'
+import nunjucks from 'nunjucks'
+
+nunjucks.configure(path.join(__dirname, '../templates'), { autoescape: true })
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyASuFhL2KSFLhwfI7OfpgjLDrdFVoltu2w',
+  apiKey: process.env.API_KEY,
   authDomain: 'itsusuru-686b1.firebaseapp.com',
   projectId: 'itsusuru-686b1',
   storageBucket: 'itsusuru-686b1.appspot.com',
   messagingSenderId: '715253804816',
   appId: '1:715253804816:web:a70e4bc9b88a58eb75ff95',
   measurementId: 'G-9TXLH0VX2S',
-};
+}
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig)
 
-const db = getFirestore(app);
+const db = getFirestore(app)
 
-export const helloWorld = onRequest((request, response) => {
-  logger.info('Hello logs!', { structuredData: true });
-  response.send('Hello from Firebase!');
-});
+const options = { cors: ['https://itsusuru.com', 'http://localhost:3000'] }
 
 export const createEvent = onRequest(
-  // { cors: [/firebase\.com$/, "flutter.com"] },
-  async (request, response): Promise<void> => {
-    const data = request.body;
-    const event = {
+  options,
+  async (req, res): Promise<void> => {
+    const data = req.body
+    const event: CreateEventRequestParams = {
       name: data.name,
-      candidate_dates: data.candidate_dates, // 候補日の配列
+      candidateDates: data.candidateDates, // 候補日の配列
       createdAt: FieldValue.serverTimestamp(),
-    };
+    }
 
-    await db.collection('events')
+    await db
+      .collection('events')
       .add(event)
       .then((docRef) => {
-        console.log('Document written with ID: ', docRef.id);
-        response.send({ eventId: docRef.id, event });
-      });
+        console.log('Document written with ID: ', docRef.id)
+        res.send({ eventId: docRef.id })
+      })
   }
-);
+)
+
+export const responseEvent = onRequest(
+  options,
+  async (req, res): Promise<void> => {
+    const data = req.body
+
+    const eventReference = db.collection('events').doc(data.eventId)
+
+    const participantsReference = eventReference.collection('participants')
+
+    const response: ResponseEventRequestParams = {
+      event: eventReference,
+      name: data.name,
+      responses: data.responses,
+    }
+
+    await participantsReference.add(response).then((docRef) => {
+      console.log('Document written with ID: ', docRef.id)
+      res.send({ responseId: docRef.id, response })
+    })
+  }
+)
+
+export const fetchEvent = onRequest(
+  options,
+  async (req, res): Promise<void> => {
+    const currentURL = req.get('hx-current-url')
+
+    if (!currentURL) {
+      res.status(400).send('Bad Request')
+      return
+    }
+
+    const url = new URL(currentURL)
+    const params = new URLSearchParams(url.search)
+    const id = params.get('id')
+
+    if (!id) {
+      res.status(400).send('Bad Request')
+      return
+    }
+
+    await db
+      .collection('events')
+      .doc(id)
+      .get()
+      .then(async (docSnapshot) => {
+        if (docSnapshot.exists) {
+          console.log('Document data retrieved with ID: ', id)
+
+          const event = docSnapshot.data() as EventData
+
+          const responseText = nunjucks.render('event.njk', {
+            ...event,
+            currentURL,
+            eventId: id,
+          })
+
+          res.send(responseText)
+        } else {
+          console.log('No document found with ID: ', id)
+          res.status(404).send('Document not found')
+        }
+      })
+  }
+)
+
+export const fetchEventParticipants = onRequest(
+  options,
+  async (req, res): Promise<void> => {
+    const query = req.query as { eventId: string }
+    const participantsReference = db
+      .collection('events')
+      .doc(query.eventId)
+      .collection('participants')
+
+    await participantsReference
+      .get()
+      .then((querySnapshot) => {
+        const participants: ParticipantData[] = []
+        querySnapshot.forEach((doc) => {
+          participants.push(doc.data() as ParticipantData)
+        })
+        console.log('Participants retrieved for event ID: ', query.eventId)
+        res.send(participants)
+      })
+      .catch((error) => {
+        console.error('Error fetching participants: ', error)
+        res.status(500).send('Error fetching participants')
+      })
+  }
+)

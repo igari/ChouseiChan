@@ -1,18 +1,8 @@
-document.body.addEventListener('htmx:configRequest', function (event) {
-  const candidate_dates = window.flatpickr.input.value
-    .split(',')
-    .map((candidate_date) => {
-      const [date, time] = candidate_date.trim().split(/\s/);
-      return { date, time };
-    });
-  // Override the request parameters with the candidate dates
-  event.detail.parameters['candidate_dates'] = candidate_dates;
-});
+htmx.logAll();
 
-document.addEventListener('htmx:afterRequest', function (event) {
-  // This event is triggered after an HTMX AJAX request is made.
-  console.log('HTMX request made:', event.detail);
-});
+document.body.addEventListener('htmx:configRequest', function (event) {});
+
+document.addEventListener('htmx:afterRequest', function (event) {});
 
 document.addEventListener('htmx:afterSwap', function (event) {
   // This event is triggered after HTMX swaps content on the page.

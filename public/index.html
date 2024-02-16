@@ -1,57 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>イツスル | 日程調整ツール</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
-    <script src="schedule.js" defer></script>
-</head>
+    <script src="index.js" defer></script>
+  </head>
 
-<body>
+  <body>
     <header>
-        <h1>イツスル | 日程調整ツール</h1>
+      <h1>イツスル | 日程調整ツール</h1>
     </header>
     <main>
-        <section id="schedule-form">
-            <form hx-post="http://127.0.0.1:5001/itsusuru-686b1/us-central1/createEvent" hx-target="#schedule-list" hx-swap="outerHTML">
-                <div>
-                    <label for="event-name">Event Name:</label>
-                    <input type="text" id="event-name" name="name" required>
-                </div>
-                <div>
-                    <label for="datepicker">Event Date:</label>
-                    <input id="datepicker" name="candidate_dates" required />
-                </div>
-                <button type="submit">Create Event</button>
-            </form>
-        </section>
-        <section>
-            <button hx-get="http://127.0.0.1:5001/itsusuru-686b1/us-central1/helloWorld" hx-target="#schedule-list" hx-swap="outerHTML">button</button>
-        </section>
-        <section id="schedule-list">
-            <!-- This section will be populated with the schedule list from the server -->
-        </section>
+      <section id="schedule-form">
+        <form
+          hx-post="http://127.0.0.1:5001/itsusuru-686b1/us-central1/createEvent"
+          hx-ext="json-enc"
+        >
+          <div>
+            <input
+              type="text"
+              id="event-name"
+              name="name"
+              placeholder="イベント名を入力してね"
+              required
+            />
+          </div>
+          <div>
+            <input id="datepicker" name="candidateDates" hidden required />
+          </div>
+          <div>
+            <button type="submit">
+              イベント作成
+              <img
+                src="https://htmx.org/img/bars.svg"
+                class="htmx-indicator"
+                alt="loading..."
+              />
+            </button>
+          </div>
+        </form>
+      </section>
     </main>
 
     <script>
-        window.flatpickr = flatpickr("#datepicker", {
-            inline: true,
-            mode: 'multiple',
-            defaultHour: 19,
-            enableTime: true,
-            time_24hr: true,
-            allowInput: false,
-            locale: 'ja',
-            minuteIncrement: 15
-        });
+      window.flatpickr = flatpickr('#datepicker', {
+        inline: true,
+        mode: 'multiple',
+        defaultHour: 19,
+        enableTime: true,
+        time_24hr: true,
+        allowInput: false,
+        locale: 'ja',
+        minuteIncrement: 15,
+      })
     </script>
-</body>
-
+  </body>
 </html>

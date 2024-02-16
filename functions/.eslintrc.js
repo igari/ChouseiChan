@@ -11,11 +11,14 @@ module.exports = {
     'plugin:import/typescript',
     'google',
     'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: ['tsconfig.json', 'tsconfig.dev.json'],
     sourceType: 'module',
+    ecmaVersion: 2021,
   },
   ignorePatterns: [
     '/lib/**/*', // Ignore built files.

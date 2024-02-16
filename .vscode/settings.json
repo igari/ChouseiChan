@@ -3,5 +3,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "cSpell.words": ["AUTOINCREMENT", "datetime", "htmx", "uuidv"]
+  "cSpell.words": ["AUTOINCREMENT", "datetime", "htmx", "uuidv"],
+  "eslint.run": "onSave"
 }
