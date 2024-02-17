@@ -41,6 +41,10 @@
         {
           "source": "/event",
           "function": "fetchEvent"
+        },
+        {
+          "source": "/edit",
+          "function": "fetchEdit"
         }
       ]
     }
@@ -60,6 +64,10 @@
       {
         "source": "/event",
         "function": "fetchEvent"
+      },
+      {
+        "source": "/edit",
+        "function": "fetchEdit"
       }
     ]
   }

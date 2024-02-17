@@ -3,8 +3,9 @@ htmx.logAll()
 let fp = null
 
 document.body.addEventListener('htmx:configRequest', function (event) {
-  const url = new URL(event.detail.path)
-  switch (url.pathname.split('/').at(-1)) {
+  const url = event.detail.path
+  // TODO: refactor: if last string is slash, it's breakable
+  switch (url.split('/').at(-1)) {
     case 'createEvent': {
       const values = htmx.values(htmx.find('#form-create-event'))
       const candidateDates = values.candidateDates
@@ -15,8 +16,9 @@ document.body.addEventListener('htmx:configRequest', function (event) {
         })
       // Override the request parameters with the candidate dates
       event.detail.parameters['candidateDates'] = candidateDates
-
+      // TODO: improve behavior
       if (fp) fp.destroy()
+      break
     }
   }
 })
@@ -40,6 +42,7 @@ document.body.addEventListener('htmx:afterSwap', function () {
 })
 
 window.addEventListener('popstate', async function (event) {
+  // wait dom rendering
   await new Promise((resolve) => setTimeout(resolve, 0))
   htmx.process(document.body)
   initFlatpickr()

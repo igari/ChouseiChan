@@ -28,57 +28,44 @@
           <label>みんなにURLを共有しよう</label>
           <input type="text" readonly value="{{ url }}" />
         </section>
-        <form
-          hx-post="http://127.0.0.1:5001/itsusuru-686b1/us-central1/responseEvent"
-        >
-          <section>
-            <input
-              type="text"
-              name="name"
-              placeholder="名前を入力してね"
-              required
-            />
-          </section>
-          <section>
-            <ul class="candidate-date">
+        <section>
+          {% if participants.length > 0 %}
+          <table>
+            <tr>
+              <th></th>
               {% for c in candidateDates %}
-              <li>
-                <time datetime="{{ c.date }}T{{ c.time }}"
-                  >{{ c.date }} {{ c.time }}</time
-                >
-                <ul>
-                  <li>
-                    <input
-                      type="radio"
-                      name="responses[{{ c.date }}T{{ c.time }}]"
-                      value="YES"
-                    />◯
-                  </li>
-                  <li>
-                    <input
-                      type="radio"
-                      name="responses[{{ c.date }}T{{ c.time }}]"
-                      value="MAYBE"
-                    />△
-                  </li>
-                  <li>
-                    <input
-                      type="radio"
-                      name="responses[{{ c.date }}T{{ c.time }}]"
-                      value="NO"
-                      checked
-                    />✕
-                  </li>
-                </ul>
-              </li>
+              <th>{{ c.date }}<br />{{ c.time }}</th>
               {% endfor %}
-            </ul>
-          </section>
-          <footer>
-            <button type="submit">送信</button>
-          </footer>
-          <input type="hidden" name="eventId" value="{{ id }}" />
-        </form>
+            </tr>
+            {% for p in participants %}
+            <tr>
+              <th>
+                <a
+                  href="/edit?id={{id}}&name={{ p.name }}&responses={{ p.responses.join(',') }}&participantId={{ p.id }}"
+                  >{{ p.name }}</a
+                >
+              </th>
+              {% for r in p.responses %}
+              <td>{{ r }}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </table>
+          {% else %}
+          <p>まだ誰も入力してないよ</p>
+          {% endif %}
+        </section>
+        <section>
+          <button
+            hx-get="/edit?id={{id}}"
+            hx-swap="outerHTML"
+            hx-select=".wrapper"
+            hx-target="closest .wrapper"
+            hx-push-url="true"
+          >
+            予定を入力
+          </button>
+        </section>
       </main>
     </div>
   </body>

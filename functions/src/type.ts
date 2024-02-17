@@ -11,6 +11,10 @@ export interface ParticipantData {
   responses: { [datetime: string]: ResponseType }[]
 }
 
+export interface ParticipantDataWithId extends ParticipantData {
+  id: string
+}
+
 export interface EventData {
   name: string
   candidateDates: string
