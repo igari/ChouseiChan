@@ -1,44 +1,59 @@
-htmx.logAll();
+htmx.logAll()
+
+let fp = null
 
 document.body.addEventListener('htmx:configRequest', function (event) {
-  const candidateDates = window.flatpickr.input.value
-    .split(',')
-    .map((candidate_date) => {
-      const [date, time] = candidate_date.trim().split(/\s/);
-      return { date, time };
-    });
-  // Override the request parameters with the candidate dates
-  event.detail.parameters['candidateDates'] = candidateDates;
-});
+  const url = new URL(event.detail.path)
+  switch (url.pathname.split('/').at(-1)) {
+    case 'createEvent': {
+      const values = htmx.values(htmx.find('#form-create-event'))
+      const candidateDates = values.candidateDates
+        .split(',')
+        .map((candidateDate) => {
+          const [date, time] = candidateDate.trim().split(/\s/)
+          return { date, time }
+        })
+      // Override the request parameters with the candidate dates
+      event.detail.parameters['candidateDates'] = candidateDates
 
-document.addEventListener('htmx:afterRequest', function (event) {
-  // This event is triggered after an HTMX AJAX request is made.
-  console.log('HTMX request made:', event.detail);
-  const xhr = event.detail.xhr;
-
-  const response = JSON.parse(xhr.response);
-
-  window.location.href = `/event.html?id=${response.eventId}`;
-});
-
-document.addEventListener('htmx:afterSwap', function (event) {
-  // This event is triggered after HTMX swaps content on the page.
-  console.log('HTMX content swapped:', event.detail);
-});
+      if (fp) fp.destroy()
+    }
+  }
+})
 
 // Function to initialize any JavaScript after HTMX content swap
 function initDynamicContent() {
   // If you have any dynamic content that needs JS initialization, do it here.
   // For example, attaching event listeners to new DOM elements.
+  const datepickerEl = document.getElementById('datepicker')
+  if (datepickerEl) {
+    initFlatpickr()
+  }
 }
 
 // Initialize dynamic content on page load
-initDynamicContent();
+initDynamicContent()
 
 // Listen for HTMX content swaps to re-initialize dynamic content
 document.body.addEventListener('htmx:afterSwap', function () {
-  initDynamicContent();
-});
+  initDynamicContent()
+})
 
-// You can add more JavaScript code here if needed for your scheduling tool.
-// For example, code to handle form submissions, dynamic updates, etc.
+window.addEventListener('popstate', async function (event) {
+  await new Promise((resolve) => setTimeout(resolve, 0))
+  htmx.process(document.body)
+  initFlatpickr()
+})
+
+function initFlatpickr() {
+  fp = flatpickr('#datepicker', {
+    inline: true,
+    mode: 'multiple',
+    defaultHour: 19,
+    enableTime: true,
+    time_24hr: true,
+    allowInput: false,
+    locale: 'ja',
+    minuteIncrement: 15,
+  })
+}

@@ -1,53 +1,85 @@
-<main>
-  <h1>{{ name }}</h1>
-  <section>
-    <label>みんなにURLを共有しよう</label>
-    <input type="text" readonly value="{{ currentURL }}" />
-  </section>
-  <form
-    hx-post="http://127.0.0.1:5001/itsusuru-686b1/us-central1/responseEvent"
-  >
-    <section>
-      <input type="text" name="name" placeholder="名前を入力してね" required />
-    </section>
-    <section>
-      <ul class="candidate-date">
-        {% for c in candidateDates %}
-        <li>
-          <time datetime="{{ c.date }}T{{ c.time }}"
-            >{{ c.date }} {{ c.time }}</time
-          >
-          <ul>
-            <li>
-              <input
-                type="radio"
-                name="responses[{{ c.date }}T{{ c.time }}]"
-                value="YES"
-              />◯
-            </li>
-            <li>
-              <input
-                type="radio"
-                name="responses[{{ c.date }}T{{ c.time }}]"
-                value="MAYBE"
-              />△
-            </li>
-            <li>
-              <input
-                type="radio"
-                name="responses[{{ c.date }}T{{ c.time }}]"
-                value="NO"
-                checked
-              />✕
-            </li>
-          </ul>
-        </li>
-        {% endfor %}
-      </ul>
-    </section>
-    <footer>
-      <button type="submit">送信</button>
-    </footer>
-    <input type="hidden" name="eventId" value="{{ eventId }}" />
-  </form>
-</main>
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>イツスル | 日程調整ツール</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+    <script src="index.js" defer></script>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>イツスル</h1>
+      </header>
+      <main>
+        <h1>{{ name }}</h1>
+        <section>
+          <label>みんなにURLを共有しよう</label>
+          <input type="text" readonly value="{{ url }}" />
+        </section>
+        <form
+          hx-post="http://127.0.0.1:5001/itsusuru-686b1/us-central1/responseEvent"
+        >
+          <section>
+            <input
+              type="text"
+              name="name"
+              placeholder="名前を入力してね"
+              required
+            />
+          </section>
+          <section>
+            <ul class="candidate-date">
+              {% for c in candidateDates %}
+              <li>
+                <time datetime="{{ c.date }}T{{ c.time }}"
+                  >{{ c.date }} {{ c.time }}</time
+                >
+                <ul>
+                  <li>
+                    <input
+                      type="radio"
+                      name="responses[{{ c.date }}T{{ c.time }}]"
+                      value="YES"
+                    />◯
+                  </li>
+                  <li>
+                    <input
+                      type="radio"
+                      name="responses[{{ c.date }}T{{ c.time }}]"
+                      value="MAYBE"
+                    />△
+                  </li>
+                  <li>
+                    <input
+                      type="radio"
+                      name="responses[{{ c.date }}T{{ c.time }}]"
+                      value="NO"
+                      checked
+                    />✕
+                  </li>
+                </ul>
+              </li>
+              {% endfor %}
+            </ul>
+          </section>
+          <footer>
+            <button type="submit">送信</button>
+          </footer>
+          <input type="hidden" name="eventId" value="{{ id }}" />
+        </form>
+      </main>
+    </div>
+  </body>
+</html>

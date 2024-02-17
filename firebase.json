@@ -32,7 +32,17 @@
     "singleProjectMode": true,
     "hosting": {
       "port": 5000,
-      "public": "public"
+      "public": "public",
+      "rewrites": [
+        {
+          "source": "/",
+          "destination": "/index.html"
+        },
+        {
+          "source": "/event",
+          "function": "fetchEvent"
+        }
+      ]
     }
   },
   "hosting": {
@@ -41,6 +51,16 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/event",
+        "function": "fetchEvent"
+      }
     ]
   }
 }

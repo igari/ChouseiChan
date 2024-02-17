@@ -1,4 +1,4 @@
-// import { logger } from 'firebase-functions';
+// import { logger } from 'firebase-functions';//TODO loggerの使い方を調べる
 import { onRequest } from 'firebase-functions/v2/https'
 
 import path from 'node:path'
@@ -44,8 +44,8 @@ export const createEvent = onRequest(
       .collection('events')
       .add(event)
       .then((docRef) => {
-        console.log('Document written with ID: ', docRef.id)
-        res.send({ eventId: docRef.id })
+        const targetURL = `http://127.0.0.1:5000/event?id=${docRef.id}`
+        res.redirect(303, targetURL)
       })
   }
 )
@@ -67,7 +67,8 @@ export const responseEvent = onRequest(
 
     await participantsReference.add(response).then((docRef) => {
       console.log('Document written with ID: ', docRef.id)
-      res.send({ responseId: docRef.id, response })
+      res.set('HX-Trigger', 'fetchEventParticipants')
+      res.sendStatus(200)
     })
   }
 )
@@ -75,21 +76,14 @@ export const responseEvent = onRequest(
 export const fetchEvent = onRequest(
   options,
   async (req, res): Promise<void> => {
-    const currentURL = req.get('hx-current-url')
-
-    if (!currentURL) {
-      res.status(400).send('Bad Request')
-      return
-    }
-
-    const url = new URL(currentURL)
-    const params = new URLSearchParams(url.search)
-    const id = params.get('id')
+    const id = req.query.id as string
 
     if (!id) {
       res.status(400).send('Bad Request')
       return
     }
+
+    const url = req.url
 
     await db
       .collection('events')
@@ -103,8 +97,8 @@ export const fetchEvent = onRequest(
 
           const responseText = nunjucks.render('event.njk', {
             ...event,
-            currentURL,
-            eventId: id,
+            url,
+            id,
           })
 
           res.send(responseText)
