@@ -28,7 +28,7 @@ const app = initializeApp(firebaseConfig)
 
 const db = getFirestore(app)
 
-const options = { cors: ['https://itsusuru.com', 'http://localhost:3000'] }
+const options = { cors: ['https://itsusuru.com'] }
 
 export const createEvent = onRequest(
   options,
