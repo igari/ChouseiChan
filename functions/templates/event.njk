@@ -7,11 +7,9 @@
     <link rel="stylesheet" href="./css/styles.css"/>
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-/>
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
-    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <script src="index.js" defer></script>
@@ -25,25 +23,29 @@
       </header>
       <main>
         <div>
-          <h2>{{ name }}</h2>
+          <h2>{{ event.name }}</h2>
           <nav>
             <ul>
               <li>
-                <a href="/?eventId={{ eventId }}">編集</a>
+                <a href="/?eventId={{ event.id }}">編集</a>
               </li>
             </ul>
           </nav>
         </div>
         <section>
-          <label>みんなにURLを共有しよう</label>
-          <input type="text" readonly value="{{ url }}"/>
+          <div>
+            <label>みんなにURLを共有しよう</label>
+          </div>
+          <div>
+            <input type="text" readonly value="{{ url }}"
+              _="on click call navigator.clipboard.writeText(me.value)"/>
+          </div>
         </section>
         <section>
-
           <table>
             <tr>
               <th></th>
-              {% for c in candidateDates %}
+              {% for c in event.candidateDates %}
                 <th>{{ c.date }}<br/>{{ c.time }}</th>
               {% endfor %}
             </tr>
@@ -51,7 +53,7 @@
               {% for p in participants %}
                 <tr>
                   <th>
-                    <a href="/edit?eventId={{eventId}}&participantId={{ p.id }}">
+                    <a href="/edit?eventId={{event.id}}&participantId={{ p.id }}">
                       {{ p.name }}
                     </a>
                   </th>
@@ -62,7 +64,7 @@
               {% endfor %}
             {% else %}
               <tr>
-                <td colspan="{{ candidateDates.length + 1 }}">
+                <td colspan="{{ event.candidateDates.length + 1 }}">
                   早速予定を入力しよう
                 </td>
               </tr>
@@ -71,7 +73,7 @@
         </section>
         <section>
           <button
-            hx-get="/edit?eventId={{eventId}}"
+            hx-get="/edit?eventId={{event.id}}"
             hx-swap="outerHTML"
             hx-select=".wrapper"
             hx-target="closest .wrapper"
@@ -82,5 +84,11 @@
         </section>
       </main>
     </div>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+    <script type="text/hyperscript">
+      def copyToClipboard(a)
+       writeText(a) into the navigator's clipboard
+      end
+    </script>
   </body>
 </html>

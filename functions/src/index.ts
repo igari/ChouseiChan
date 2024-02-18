@@ -15,9 +15,17 @@ import {
 } from './type'
 import nunjucks from 'nunjucks'
 
-nunjucks.configure(path.join(__dirname, '../templates'), { autoescape: true })
+const env = nunjucks.configure(path.join(__dirname, '../templates'), {
+  autoescape: true,
+})
 
-// CORSの設定
+env.addGlobal(
+  'API_BASE_URL',
+  process.env.NODE_ENV === 'production'
+    ? process.env.API_BASE_PATH_PRD
+    : process.env.API_BASE_PATH_DEV
+)
+
 const corsMiddleware = cors({
   origin: ['https://itsusuru.com', 'http://127.0.0.1:5000'],
   optionsSuccessStatus: 200,
@@ -61,11 +69,13 @@ export const fetchHome = onRequest(async (req, res): Promise<void> => {
         })
 
       const responseText = nunjucks.render('index.njk', {
-        eventId,
-        name: event.name,
-        candidateDates: event.candidateDates
-          .map(({ date, time }) => `${date} ${time}`)
-          .join(','),
+        event: {
+          id: eventId,
+          name: event.name,
+          candidateDates: event.candidateDates
+            .map(({ date, time }) => `${date} ${time}`)
+            .join(','),
+        },
       })
 
       res.send(responseText)
@@ -126,8 +136,7 @@ export const fetchEvent = onRequest(async (req, res): Promise<void> => {
       return
     }
 
-    // TODO: to full url
-    const url = req.url
+    const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`
 
     const eventData = await db
       .collection('events')
@@ -179,7 +188,11 @@ export const fetchEvent = onRequest(async (req, res): Promise<void> => {
     ])
 
     const responseText = nunjucks.render('event.njk', {
-      event,
+      event: {
+        id: eventId,
+        name: event.name,
+        candidateDates: event.candidateDates,
+      },
       participants: participants.map((participant) => {
         return {
           ...participant,
@@ -198,7 +211,7 @@ export const fetchEdit = onRequest(async (req, res): Promise<void> => {
     const eventId = (req.query.eventId as string) || ''
     const participantId = (req.query.participantId as string) || ''
 
-    if (!eventId || !participantId) {
+    if (!eventId) {
       res.status(400).send('Bad Request')
       return
     }
@@ -256,22 +269,34 @@ export const fetchEdit = onRequest(async (req, res): Promise<void> => {
       return p.id === participantId
     })
 
-    if (!participant) {
-      res.status(404).send('Participant not found')
-      return
+    if (participant) {
+      const responseText = nunjucks.render('edit.njk', {
+        event: {
+          id: eventId,
+          name: event.name,
+          candidateDates: event.candidateDates,
+        },
+        participants,
+        participant: {
+          id: participant.id,
+          name: participant.name,
+          responses: Object.values(participant.responses),
+        },
+      })
+
+      res.send(responseText)
+    } else {
+      const responseText = nunjucks.render('edit.njk', {
+        event: {
+          id: eventId,
+          name: event.name,
+          candidateDates: event.candidateDates,
+        },
+        participants,
+      })
+
+      res.send(responseText)
     }
-
-    const responseText = nunjucks.render('edit.njk', {
-      event,
-      participants,
-      participant: {
-        id: participant.id,
-        name: participant.name,
-        responses: Object.values(participant.responses),
-      },
-    })
-
-    res.send(responseText)
   })
 })
 

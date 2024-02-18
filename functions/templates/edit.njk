@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>イツスル | 日程調整ツール</title>
     <link rel="stylesheet" href="./css/styles.css"/>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
@@ -30,7 +27,7 @@
           <nav>
             <ul>
               <li>
-                <a href="/?eventId={{ eventId }}">編集</a>
+                <a href="/?eventId={{ event.id }}">編集</a>
               </li>
             </ul>
           </nav>
@@ -47,73 +44,51 @@
               type="text"
               name="name"
               placeholder="名前を入力してね"
-              value="{{ participant.name }}"
-              required
-/>
+              {% if participant %}value="{{ participant.name }}"{% endif %}
+              required/>
           </section>
           <section>
             <ul class="candidate-date">
-              {% if participant.name %}
-                {% for c in candidateDates %}
+              {% if participant %}
+                {% for c in event.candidateDates %}
                   <li>
-                    <time datetime="{{ c.date }}T{{ c.time }}"
-                  >{{ c.date }}
-                      {{ c.time }}</time
-                >
+                    <time datetime="{{ c.date }}T{{ c.time }}">
+                      {{ c.date }}
+                      {{ c.time }}
+                    </time>
                     <ul>
                       <li>
-                        <input type="radio" name="responses[{{c.date}}T{{ c.time}}]"
-                    value="YES" {% if participant.responses[loop.index0]
-                    ==='YES' %}checked{% endif %}/> ◯
-                  </li>
+                        <input type="radio" name="responses[{{c.date}}T{{ c.time}}]" value="YES" 
+                          {% if participant.responses[loop.index0] ==='YES' %}checked{% endif %}/> ◯
+                      </li>
                       <li>
-                        <input type="radio" name="responses[{{ c.date }}T{{
-                    c.time}}]" value="MAYBE" {% if
-                    participant.responses[loop.index0] === 'MAYBE' %}checked{%
-                    endif %}/> △
-                  </li>
+                        <input type="radio" name="responses[{{ c.date }}T{{c.time}}]" value="MAYBE" 
+                          {% if participant.responses[loop.index0] === 'MAYBE' %}checked{%endif %}/> △
+                      </li>
                       <li>
-                        <input type="radio" name="responses[{{ c.date }}T{{
-                    c.time}}]" value="NO" {% if
-                    participant.responses[loop.index0] === 'NO' %}checked{%
-                    endif %}/> ✕
-                  </li>
+                        <input type="radio" name="responses[{{ c.date }}T{{c.time}}]" value="NO"
+                         {% if participant.responses[loop.index0] === 'NO' %}checked{%endif %}/> ✕
+                      </li>
                     </ul>
                   </li>
                 {% endfor %}
               {% else %}
-                {% for c in candidateDates %}
+                {% for c in event.candidateDates %}
                   <li>
-                    <time datetime="{{ c.date }}T{{ c.time }}"
-                  >{{ c.date }}
-                      {{ c.time }}</time
-                >
+                    <time datetime="{{ c.date }}T{{ c.time }}">
+                      {{ c.date }}
+                      {{ c.time }}
+                    </time>
                     <ul>
                       <li>
-                        <input
-                      type="radio"
-                      name="responses[{{c.date}}T{{c.time}}]"
-                      value="YES"
-/>
-                    ◯
-                  </li>
+                        <input type="radio" name="responses[{{c.date}}T{{c.time}}]" value="YES"/> ◯
+                      </li>
                       <li>
-                        <input
-                      type="radio"
-                      name="responses[{{ c.date }}T{{ c.time}}]"
-                      value="MAYBE"
-/>
-                    △
-                  </li>
+                        <input type="radio" name="responses[{{ c.date }}T{{ c.time}}]" value="MAYBE"/> △
+                      </li>
                       <li>
-                        <input
-                      type="radio"
-                      name="responses[{{ c.date }}T{{ c.time}}]"
-                      value="NO"
-                      checked
-/>
-                    ✕
-                  </li>
+                        <input type="radio" name="responses[{{ c.date }}T{{ c.time}}]" value="NO" checked/> ✕
+                      </li>
                     </ul>
                   </li>
                 {% endfor %}
@@ -123,12 +98,10 @@
           <footer>
             <button type="submit">送信</button>
           </footer>
-          <input type="hidden" name="eventId" value="{{ eventId }}"/>
-          <input
-            type="hidden"
-            name="participantId"
-            value="{{ participant.id }}"
-/>
+          <input type="hidden" name="eventId" value="{{ event.id }}"/>
+          {% if participant %}
+            <input type="hidden" name="participantId" value="{{ participant.id }}"/>
+          {% endif %}
         </form>
       </main>
     </div>

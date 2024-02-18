@@ -1,6 +1,6 @@
 {% set API_BASE_PATH = "http://127.0.0.1:5001/itsusuru-686b1/us-central1" %}
 {% set ENDPOINT -%}
-{%- if eventId -%}
+{%- if event -%}
   {{API_BASE_PATH}}/updateEvent
 {%- else -%}
   {{API_BASE_PATH}}/createEvent
@@ -37,12 +37,13 @@
         <section>
           <form id="form-create-event" hx-post="{{ ENDPOINT }}" hx-ext="json-enc" hx-swap="outerHTML" hx-select=".wrapper" hx-target="closest .wrapper" hx-push-url="true">
             <div>
-              <input type="text" id="event-name" name="name" value="{{ name }}" placeholder="イベント名を入力してね" required="required"/>
+              <input type="text" id="event-name" name="name" 
+                {% if event %}value="{{ event.name }}"{% endif %}
+                placeholder="イベント名を入力してね" required="required"/>
             </div>
             <div>
-              {{ candidateDates }}
-              {% if candidateDates %}
-                <input id="datepicker" name="candidateDates" value="{{ candidateDates }}" hidden="hidden" required="required"/>
+              {% if event %}
+                <input id="datepicker" name="candidateDates" value="{{ event.candidateDates }}" hidden="hidden" required="required"/>
               {% else %}
                 <input id="datepicker" name="candidateDates" hidden="hidden" required="required"/>
               {% endif %}
@@ -53,8 +54,8 @@
                 <img src="https://htmx.org/img/bars.svg" class="htmx-indicator" alt="loading..."/>
               </button>
             </div>
-            {% if eventId %}
-              <input type="hidden" name="eventId" value="{{ eventId }}"/>
+            {% if event %}
+              <input type="hidden" name="eventId" value="{{ event.id }}"/>
             {% endif %}
           </form>
         </section>
