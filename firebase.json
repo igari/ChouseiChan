@@ -36,7 +36,7 @@
       "rewrites": [
         {
           "source": "/",
-          "destination": "/index.html"
+          "function": "fetchHome"
         },
         {
           "source": "/event",
@@ -59,7 +59,7 @@
     "rewrites": [
       {
         "source": "/",
-        "destination": "/index.html"
+        "function": "fetchHome"
       },
       {
         "source": "/event",

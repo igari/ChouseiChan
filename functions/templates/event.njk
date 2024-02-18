@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>イツスル | 日程調整ツール</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/styles.css"/>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-    />
+/>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
@@ -16,48 +16,61 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
     <script src="index.js" defer></script>
   </head>
-
   <body>
     <div class="wrapper">
       <header>
-        <h1>イツスル</h1>
+        <h1>
+          <a href="/" hx-boost="true">イツスル</a>
+        </h1>
+        <nav>
+          <ul>
+            <li>
+              <a href="/?eventId={{ eventId }}">編集</a>
+            </li>
+          </ul>
+        </nav>
       </header>
       <main>
         <h1>{{ name }}</h1>
         <section>
           <label>みんなにURLを共有しよう</label>
-          <input type="text" readonly value="{{ url }}" />
+          <input type="text" readonly value="{{ url }}"/>
         </section>
         <section>
-          {% if participants.length > 0 %}
+
           <table>
             <tr>
               <th></th>
               {% for c in candidateDates %}
-              <th>{{ c.date }}<br />{{ c.time }}</th>
+                <th>{{ c.date }}<br/>{{ c.time }}</th>
               {% endfor %}
             </tr>
-            {% for p in participants %}
-            <tr>
-              <th>
-                <a
-                  href="/edit?id={{id}}&name={{ p.name }}&responses={{ p.responses.join(',') }}&participantId={{ p.id }}"
-                  >{{ p.name }}</a
-                >
-              </th>
-              {% for r in p.responses %}
-              <td>{{ r }}</td>
+            {% if participants.length > 0 %}
+              {% for p in participants %}
+                <tr>
+                  <th>
+                    <a href="/edit?eventId={{eventId}}&participantId={{ p.id }}">
+                      {{ p.name }}
+                    </a>
+                  </th>
+                  {% for r in p.responses %}
+                    <td>{{ r }}</td>
+                  {% endfor %}
+                </tr>
               {% endfor %}
-            </tr>
-            {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="{{ candidateDates.length + 1 }}">
+                  まだ誰も入力してないよ。<br>
+                  先陣を切ってみんなに圧をかけよう(*^^*)
+                </td>
+              </tr>
+            {% endif %}
           </table>
-          {% else %}
-          <p>まだ誰も入力してないよ</p>
-          {% endif %}
         </section>
         <section>
           <button
-            hx-get="/edit?id={{id}}"
+            hx-get="/edit?eventId={{eventId}}"
             hx-swap="outerHTML"
             hx-select=".wrapper"
             hx-target="closest .wrapper"

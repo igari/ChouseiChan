@@ -6,7 +6,8 @@ document.body.addEventListener('htmx:configRequest', function (event) {
   const url = event.detail.path
   // TODO: refactor: if last string is slash, it's breakable
   switch (url.split('/').at(-1)) {
-    case 'createEvent': {
+    case 'createEvent':
+    case 'updateEvent': {
       const values = htmx.values(htmx.find('#form-create-event'))
       const candidateDates = values.candidateDates
         .split(',')
@@ -49,7 +50,9 @@ window.addEventListener('popstate', async function (event) {
 })
 
 function initFlatpickr() {
-  fp = flatpickr('#datepicker', {
+  const input = document.getElementById('datepicker')
+  const defaultDate = input.value.split(',').map((datetime) => datetime.trim())
+  fp = flatpickr(input, {
     inline: true,
     mode: 'multiple',
     defaultHour: 19,
@@ -58,5 +61,6 @@ function initFlatpickr() {
     allowInput: false,
     locale: 'ja',
     minuteIncrement: 15,
+    defaultDate,
   })
 }

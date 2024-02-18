@@ -11,6 +11,7 @@ import {
   ParticipantData,
   ParticipantDataWithId,
   ResponseEventRequestParams,
+  UpdateEventRequestParams,
 } from './type'
 import nunjucks from 'nunjucks'
 
@@ -37,12 +38,52 @@ const app = initializeApp(firebaseConfig)
 
 const db = getFirestore(app)
 
+export const fetchHome = onRequest(async (req, res): Promise<void> => {
+  corsMiddleware(req, res, async () => {
+    const eventId = req.query.eventId as string
+
+    if (eventId) {
+      const event = await db
+        .collection('events')
+        .doc(eventId)
+        .get()
+        .then(async (docSnapshot) => {
+          if (docSnapshot.exists) {
+            console.log('Document data retrieved with ID: ', eventId)
+
+            return docSnapshot.data() as EventData
+          } else {
+            const errorMessage = `No document found with ID: ${eventId}`
+            console.error(errorMessage)
+            res.sendStatus(404)
+            return Promise.reject(new Error(errorMessage))
+          }
+        })
+
+      const responseText = nunjucks.render('index.njk', {
+        eventId,
+        name: event.name,
+        candidateDates: event.candidateDates
+          .map(({ date, time }) => `${date} ${time}`)
+          .join(','),
+      })
+
+      res.send(responseText)
+    } else {
+      const responseText = nunjucks.render('index.njk')
+
+      res.send(responseText)
+    }
+  })
+})
+
 export const createEvent = onRequest(async (req, res): Promise<void> => {
   corsMiddleware(req, res, async () => {
-    const data = req.body
+    const data = req.body as EventData
+
     const event: CreateEventRequestParams = {
       name: data.name,
-      candidateDates: data.candidateDates, // 候補日の配列
+      candidateDates: data.candidateDates,
       createdAt: FieldValue.serverTimestamp(),
     }
 
@@ -50,7 +91,27 @@ export const createEvent = onRequest(async (req, res): Promise<void> => {
       .collection('events')
       .add(event)
       .then((docRef) => {
-        const targetURL = `http://127.0.0.1:5000/event?id=${docRef.id}`
+        const targetURL = `http://127.0.0.1:5000/event?eventId=${docRef.id}`
+        res.redirect(303, targetURL)
+      })
+  })
+})
+
+export const updateEvent = onRequest(async (req, res): Promise<void> => {
+  corsMiddleware(req, res, async () => {
+    const data = req.body as UpdateEventRequestParams
+
+    const event: EventData = {
+      name: data.name,
+      candidateDates: data.candidateDates,
+    }
+
+    await db
+      .collection('events')
+      .doc(data.eventId)
+      .set(event)
+      .then(() => {
+        const targetURL = `http://127.0.0.1:5000/event?eventId=${data.eventId}`
         res.redirect(303, targetURL)
       })
   })
@@ -58,9 +119,9 @@ export const createEvent = onRequest(async (req, res): Promise<void> => {
 
 export const fetchEvent = onRequest(async (req, res): Promise<void> => {
   corsMiddleware(req, res, async () => {
-    const id = req.query.id as string
+    const eventId = req.query.eventId as string
 
-    if (!id) {
+    if (!eventId) {
       res.status(400).send('Bad Request')
       return
     }
@@ -70,17 +131,17 @@ export const fetchEvent = onRequest(async (req, res): Promise<void> => {
 
     const eventData = await db
       .collection('events')
-      .doc(id)
+      .doc(eventId)
       .get()
       .then(async (docSnapshot) => {
         if (docSnapshot.exists) {
-          console.log('Document data retrieved with ID: ', id)
+          console.log('Document data retrieved with ID: ', eventId)
 
           const event = docSnapshot.data() as EventData
 
           return event
         } else {
-          const errorMessage = `No document found with ID: ${id}`
+          const errorMessage = `No document found with ID: ${eventId}`
           console.error(errorMessage)
           res.sendStatus(404)
           return Promise.reject(new Error(errorMessage))
@@ -89,22 +150,21 @@ export const fetchEvent = onRequest(async (req, res): Promise<void> => {
 
     const eventParticipantsData = await db
       .collection('events')
-      .doc(id)
+      .doc(eventId)
       .collection('participants')
       .get()
       .then((querySnapshot) => {
         const participants: ParticipantDataWithId[] = []
-        querySnapshot.forEach((doc) => {
-          const id = doc.id
-
-          const participant = {
-            id,
-            ...(doc.data() as ParticipantData),
-          } as ParticipantDataWithId
-
+        querySnapshot.forEach((docRef) => {
+          const data = docRef.data() as ParticipantData
+          const participant: ParticipantDataWithId = {
+            id: docRef.id,
+            name: data.name,
+            responses: data.responses,
+          }
           participants.push(participant)
         })
-        console.log('Participants retrieved for event ID: ', id)
+        console.log('Participants retrieved for event ID: ', eventId)
         return participants
       })
       .catch((error) => {
@@ -119,8 +179,7 @@ export const fetchEvent = onRequest(async (req, res): Promise<void> => {
     ])
 
     const responseText = nunjucks.render('event.njk', {
-      // TODO: stop to use `...`
-      ...event,
+      event,
       participants: participants.map((participant) => {
         return {
           ...participant,
@@ -128,7 +187,6 @@ export const fetchEvent = onRequest(async (req, res): Promise<void> => {
         }
       }),
       url,
-      id,
     })
 
     res.send(responseText)
@@ -137,29 +195,27 @@ export const fetchEvent = onRequest(async (req, res): Promise<void> => {
 
 export const fetchEdit = onRequest(async (req, res): Promise<void> => {
   corsMiddleware(req, res, async () => {
-    const id = (req.query.id as string) || ''
-    const name = (req.query.name as string) || ''
+    const eventId = (req.query.eventId as string) || ''
     const participantId = (req.query.participantId as string) || ''
-    const responses = ((req.query.responses as string) || '').split(',')
 
-    if (!id) {
+    if (!eventId || !participantId) {
       res.status(400).send('Bad Request')
       return
     }
 
     const eventData = await db
       .collection('events')
-      .doc(id)
+      .doc(eventId)
       .get()
       .then(async (docSnapshot) => {
         if (docSnapshot.exists) {
-          console.log('Document data retrieved with ID: ', id)
+          console.log('Document data retrieved with ID: ', eventId)
 
           const event = docSnapshot.data() as EventData
 
           return event
         } else {
-          const errorMessage = `No document found with ID: ${id}`
+          const errorMessage = `No document found with ID: ${eventId}`
           console.error(errorMessage)
           res.sendStatus(404)
           return Promise.reject(new Error(errorMessage))
@@ -168,22 +224,21 @@ export const fetchEdit = onRequest(async (req, res): Promise<void> => {
 
     const eventParticipantsData = await db
       .collection('events')
-      .doc(id)
+      .doc(eventId)
       .collection('participants')
       .get()
       .then((querySnapshot) => {
         const participants: ParticipantDataWithId[] = []
         querySnapshot.forEach((doc) => {
-          const id = doc.id
-
-          const participant = {
-            id,
-            ...(doc.data() as ParticipantData),
-          } as ParticipantDataWithId
-
+          const data = doc.data() as ParticipantData
+          const participant: ParticipantDataWithId = {
+            id: doc.id,
+            name: data.name,
+            responses: data.responses,
+          }
           participants.push(participant)
         })
-        console.log('Participants retrieved for event ID: ', id)
+        console.log('Participants retrieved for event ID: ', eventId)
         return participants
       })
       .catch((error) => {
@@ -197,15 +252,22 @@ export const fetchEdit = onRequest(async (req, res): Promise<void> => {
       eventParticipantsData,
     ])
 
+    const participant = participants.find((p) => {
+      return p.id === participantId
+    })
+
+    if (!participant) {
+      res.status(404).send('Participant not found')
+      return
+    }
+
     const responseText = nunjucks.render('edit.njk', {
-      // TODO: stop to use `...`
-      ...event,
+      event,
       participants,
-      id, // duplicate
       participant: {
-        name,
-        responses,
-        id: participantId,
+        id: participant.id,
+        name: participant.name,
+        responses: Object.values(participant.responses),
       },
     })
 
@@ -233,13 +295,13 @@ export const responseEvent = onRequest(async (req, res): Promise<void> => {
         .set(response)
         .then(() => {
           console.log('Document updated with ID: ', data.participantId)
-          const targetURL = `http://127.0.0.1:5000/event?id=${data.eventId}`
+          const targetURL = `http://127.0.0.1:5000/event?eventId=${data.eventId}`
           res.redirect(303, targetURL)
         })
     } else {
       await participantsReference.add(response).then(() => {
         console.log('Document written with ID: ', data.eventId)
-        const targetURL = `http://127.0.0.1:5000/event?id=${data.eventId}`
+        const targetURL = `http://127.0.0.1:5000/event?eventId=${data.eventId}`
         res.redirect(303, targetURL)
       })
     }

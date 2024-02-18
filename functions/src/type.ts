@@ -15,13 +15,23 @@ export interface ParticipantDataWithId extends ParticipantData {
   id: string
 }
 
+export interface CandidateDate {
+  date: string
+  time: string
+}
+
 export interface EventData {
   name: string
-  candidateDates: string
+  candidateDates: CandidateDate[]
+}
+
+export interface CreateEventRequestParams extends EventData {
   createdAt: FieldValue
 }
 
-export type CreateEventRequestParams = EventData
+export interface UpdateEventRequestParams extends EventData {
+  eventId: string
+}
 
 export interface ResponseEventRequestParams extends ParticipantData {
   event: DocumentReference<DocumentData>
