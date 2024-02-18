@@ -24,12 +24,28 @@ module.exports = {
     'lib/**/*', // Ignore built files.
     '.eslintrc.js',
   ],
-  plugins: ['@typescript-eslint', 'import'],
+  plugins: [
+    '@typescript-eslint',
+    '@typescript-eslint/eslint-plugin',
+    'import',
+    'unused-imports',
+  ],
   rules: {
     quotes: ['error', 'single'],
     'quote-props': 'off',
     'import/no-unresolved': 0,
+    'import/order': 'error',
     indent: ['error', 2],
     'object-curly-spacing': ['error', 'always'],
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'error',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
   },
 }
