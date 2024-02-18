@@ -1,94 +1,66 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>イツスル | 日程調整ツール</title>
-    <link rel="stylesheet" href="./css/styles.css"/>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
-    <script src="index.js" defer></script>
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>
-          <a href="/" hx-boost="true">イツスル</a>
-        </h1>
-      </header>
-      <main>
-        <div>
-          <h2>{{ event.name }}</h2>
-          <nav>
-            <ul>
-              <li>
-                <a href="/?eventId={{ event.id }}">編集</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        <section>
-          <div>
-            <label>みんなにURLを共有しよう</label>
-          </div>
-          <div>
-            <input type="text" readonly value="{{ url }}"
-              _="on click call navigator.clipboard.writeText(me.value)"/>
-          </div>
-        </section>
-        <section>
-          <table>
-            <tr>
-              <th></th>
-              {% for c in event.candidateDates %}
-                <th>{{ c.date }}<br/>{{ c.time }}</th>
-              {% endfor %}
-            </tr>
-            {% if participants.length > 0 %}
-              {% for p in participants %}
-                <tr>
-                  <th>
-                    <a href="/edit?eventId={{event.id}}&participantId={{ p.id }}">
-                      {{ p.name }}
-                    </a>
-                  </th>
-                  {% for r in p.responses %}
-                    <td>{{ r }}</td>
-                  {% endfor %}
-                </tr>
-              {% endfor %}
-            {% else %}
-              <tr>
-                <td colspan="{{ event.candidateDates.length + 1 }}">
-                  早速予定を入力しよう
-                </td>
-              </tr>
-            {% endif %}
-          </table>
-        </section>
-        <section>
-          <button
-            hx-get="/edit?eventId={{event.id}}"
-            hx-swap="outerHTML"
-            hx-select=".wrapper"
-            hx-target="closest .wrapper"
-            hx-push-url="true"
-          >
-            予定を入力
-          </button>
-        </section>
-      </main>
+{% extends "components/layout.njk" %}
+
+{% block title %}{{event.name}} | イツスル | 日程調整ツール{% endblock %}
+
+{% block content %}
+  <div>
+    <h2>{{ event.name }}</h2>
+    <nav>
+      <ul>
+        <li>
+          <a href="/?eventId={{ event.id }}">編集</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <section>
+    <div>
+      <label>みんなにURLを共有しよう</label>
     </div>
-    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
-    <script type="text/hyperscript">
-      def copyToClipboard(a)
-       writeText(a) into the navigator's clipboard
-      end
-    </script>
-  </body>
-</html>
+    <div>
+      <input type="text" readonly value="{{ url }}"
+        _="on click call navigator.clipboard.writeText(me.value)"/>
+    </div>
+  </section>
+  <section>
+    <table>
+      <tr>
+        <th></th>
+        {% for c in event.candidateDates %}
+          <th>{{ c.date }}<br/>{{ c.time }}</th>
+        {% endfor %}
+      </tr>
+      {% if participants.length > 0 %}
+        {% for p in participants %}
+          <tr>
+            <th>
+              <a href="/edit?eventId={{event.id}}&participantId={{ p.id }}">
+                {{ p.name }}
+              </a>
+            </th>
+            {% for r in p.responses %}
+              <td>{{ r }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="{{ event.candidateDates.length + 1 }}">
+            早速予定を入力しよう
+          </td>
+        </tr>
+      {% endif %}
+    </table>
+  </section>
+  <section>
+    <button
+      hx-get="/edit?eventId={{event.id}}"
+      hx-swap="outerHTML"
+      hx-select=".wrapper"
+      hx-target="closest .wrapper"
+      hx-push-url="true"
+    >
+      予定を入力
+    </button>
+  </section>
+{% endblock %}

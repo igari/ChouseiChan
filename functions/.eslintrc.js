@@ -16,12 +16,13 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['tsconfig.json', 'tsconfig.dev.json'],
+    project: ['tsconfig.json'],
     sourceType: 'module',
     ecmaVersion: 2021,
   },
   ignorePatterns: [
-    '/lib/**/*', // Ignore built files.
+    'lib/**/*', // Ignore built files.
+    '.eslintrc.js',
   ],
   plugins: ['@typescript-eslint', 'import'],
   rules: {
@@ -31,4 +32,4 @@ module.exports = {
     indent: ['error', 2],
     'object-curly-spacing': ['error', 'always'],
   },
-};
+}

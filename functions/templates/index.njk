@@ -1,65 +1,37 @@
-{% set API_BASE_PATH = "http://127.0.0.1:5001/itsusuru-686b1/us-central1" %}
-{% set ENDPOINT -%}
-{%- if event -%}
-  {{API_BASE_PATH}}/updateEvent
-{%- else -%}
-  {{API_BASE_PATH}}/createEvent
-{%- endif -%}
-{%- endset %}
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>イツスル | 日程調整ツール</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="./css/styles.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+{% if event %}
+  {% set EDIT_EVENT_PATH = "/updateEvent" %}
+{% else %}
+  {% set EDIT_EVENT_PATH = "/createEvent" %}
+{% endif %}
 
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
-    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
-    <script src="index.js" defer="defer"></script>
-  </head>
+{% extends "components/layout.njk" %}
 
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>
-          <a href="/" hx-boost="true">イツスル</a>
-        </h1>
-      </header>
-      <main>
-        <section>
-          <form id="form-create-event" hx-post="{{ ENDPOINT }}" hx-ext="json-enc" hx-swap="outerHTML" hx-select=".wrapper" hx-target="closest .wrapper" hx-push-url="true">
-            <div>
-              <input type="text" id="event-name" name="name" 
+{% block title %}イツスル | 日程調整ツール{% endblock %}
+
+{% block content %}
+  <section>
+    <form id="form-create-event" hx-post="{{API_BASE_URL}}{{ EDIT_EVENT_PATH }}" hx-ext="json-enc" hx-swap="outerHTML" hx-select=".wrapper" hx-target="closest .wrapper" hx-push-url="true">
+      <div>
+        <input type="text" id="event-name" name="name" 
                 {% if event %}value="{{ event.name }}"{% endif %}
                 placeholder="イベント名を入力してね" required="required"/>
-            </div>
-            <div>
-              {% if event %}
-                <input id="datepicker" name="candidateDates" value="{{ event.candidateDates }}" hidden="hidden" required="required"/>
-              {% else %}
-                <input id="datepicker" name="candidateDates" hidden="hidden" required="required"/>
-              {% endif %}
-            </div>
-            <div>
-              <button type="submit">
-                {%- if eventId -%}イベント更新{%- else -%}イベント作成{%- endif -%}
-                <img src="https://htmx.org/img/bars.svg" class="htmx-indicator" alt="loading..."/>
-              </button>
-            </div>
-            {% if event %}
-              <input type="hidden" name="eventId" value="{{ event.id }}"/>
-            {% endif %}
-          </form>
-        </section>
-      </main>
-    </div>
-  </body>
-</html>
+      </div>
+      <div>
+        {% if event %}
+          <input id="datepicker" name="candidateDates" value="{{ event.candidateDates }}" hidden="hidden" required="required"/>
+        {% else %}
+          <input id="datepicker" name="candidateDates" hidden="hidden" required="required"/>
+        {% endif %}
+      </div>
+      <div>
+        <button type="submit">
+          {%- if event -%}イベント更新{%- else -%}イベント作成{%- endif -%}
+          <img src="https://htmx.org/img/bars.svg" class="htmx-indicator" alt="loading..."/>
+        </button>
+      </div>
+      {% if event %}
+        <input type="hidden" name="eventId" value="{{ event.id }}"/>
+      {% endif %}
+    </form>
+  </section>
+{% endblock %}

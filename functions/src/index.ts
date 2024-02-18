@@ -22,8 +22,8 @@ const env = nunjucks.configure(path.join(__dirname, '../templates'), {
 env.addGlobal(
   'API_BASE_URL',
   process.env.NODE_ENV === 'production'
-    ? process.env.API_BASE_PATH_PRD
-    : process.env.API_BASE_PATH_DEV
+    ? process.env.API_BASE_URL_PRD
+    : process.env.API_BASE_URL_DEV
 )
 
 const corsMiddleware = cors({
