@@ -22,11 +22,12 @@ const env = nunjucks.configure(path.join(__dirname, '../templates'), {
 })
 
 const apiBaseURL = process.env.API_BASE_URL_PRD
+const ORIGIN = 'https://itsusuru.com'
 
 env.addGlobal('API_BASE_URL', apiBaseURL)
 
 const corsMiddleware = cors({
-  origin: ['https://itsusuru.com', 'http://127.0.0.1:5000'],
+  origin: [ORIGIN],
   optionsSuccessStatus: 200, // TODO: 意味を調べる
   credentials: true, // TODO: 意味を調べる
 })
@@ -116,7 +117,7 @@ export const createEvent = onRequestWrapper(async (req, res): Promise<void> => {
     .then((docRef) => {
       // TODO: 何故これが動いているのか調べる。APIサーバからのレスポンスでブラウザに別ドメインにリダイレクト実行できているのは何故
       // TODO: オリジンを変数可する
-      const targetURL = `http://127.0.0.1:5000/event?eventId=${docRef.id}`
+      const targetURL = `${ORIGIN}/event?eventId=${docRef.id}`
       res.redirect(303, targetURL)
     })
 })
@@ -134,7 +135,7 @@ export const updateEvent = onRequestWrapper(async (req, res): Promise<void> => {
     .doc(data.eventId)
     .set(event)
     .then(() => {
-      const targetURL = `http://127.0.0.1:5000/event?eventId=${data.eventId}`
+      const targetURL = `${ORIGIN}/event?eventId=${data.eventId}`
       res.redirect(303, targetURL)
     })
 })
@@ -328,13 +329,13 @@ export const responseEvent = onRequestWrapper(
         .set(response)
         .then(() => {
           console.log('Document updated with ID: ', data.participantId)
-          const targetURL = `http://127.0.0.1:5000/event?eventId=${data.eventId}`
+          const targetURL = `${ORIGIN}/event?eventId=${data.eventId}`
           res.redirect(303, targetURL)
         })
     } else {
       await participantsReference.add(response).then(() => {
         console.log('Document written with ID: ', data.eventId)
-        const targetURL = `http://127.0.0.1:5000/event?eventId=${data.eventId}`
+        const targetURL = `${ORIGIN}/event?eventId=${data.eventId}`
         res.redirect(303, targetURL)
       })
     }
