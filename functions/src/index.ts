@@ -23,13 +23,12 @@ const env = nunjucks.configure(path.join(__dirname, '../templates'), {
 
 const apiBaseURL = process.env.API_BASE_URL_PRD
 const ORIGIN = 'https://itsusuru.com'
+const API_ORIGIN = 'https://asia-northeast1-itsusuru-686b1.cloudfunctions.net'
 
 env.addGlobal('API_BASE_URL', apiBaseURL)
 
 const corsMiddleware = cors({
-  origin: [ORIGIN],
-  optionsSuccessStatus: 200, // TODO: 意味を調べる
-  credentials: true, // TODO: 意味を調べる
+  origin: [ORIGIN, API_ORIGIN],
 })
 
 // specify the region for your functions
