@@ -18,15 +18,8 @@ jobs:
           cd functions
           npm ci
           npm run build
-      - name: Deploy to Firebase Functions and Firestore
-        uses: w9jds/firebase-action@v12.9.0
-        with:
-          args: deploy --only functions,firestore --message \"${{ github.event.head_commit.message }}\"
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ITSUSURU_686B1 }}
-          PROJECT_ID: itsusuru-686b1
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0.7.1
+        uses: FirebaseExtended/action-hosting-deploy@79b1a830a9ae85409cb38056dd7761f6f1cb83fd
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ITSUSURU_686B1 }}'
