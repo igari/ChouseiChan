@@ -40,8 +40,16 @@
         "function": "fetchEdit"
       },
       {
-        "source": "/api/:functionName",
-        "function": ":functionName"
+        "source": "/api/createEvent",
+        "function": "createEvent"
+      },
+      {
+        "source": "/api/updateEvent",
+        "function": "updateEvent"
+      },
+      {
+        "source": "/api/responseEvent",
+        "function": "responseEvent"
       }
     ]
   },
@@ -73,8 +81,16 @@
           "function": "fetchEdit"
         },
         {
-          "source": "/api/:functionName",
-          "function": ":functionName"
+          "source": "/api/createEvent",
+          "function": "createEvent"
+        },
+        {
+          "source": "/api/updateEvent",
+          "function": "updateEvent"
+        },
+        {
+          "source": "/api/responseEvent",
+          "function": "responseEvent"
         }
       ]
     }
