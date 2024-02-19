@@ -21,7 +21,7 @@ jobs:
           npm ci
           npm run build
       - name: Deploy to Firebase Functions and Firestore
-        uses: w9jds/firebase-action@master
+        uses: w9jds/firebase-action@v12.9.0
         with:
           args: deploy --only functions,firestore --message \"${{ github.event.head_commit.message }}\"
         env:
