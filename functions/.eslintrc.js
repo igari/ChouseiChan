@@ -16,7 +16,7 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['tsconfig.json'],
+    project: ['tsconfig.json', 'tsconfig.dev.json'],
     sourceType: 'module',
     ecmaVersion: 2021,
   },
@@ -24,12 +24,7 @@ module.exports = {
     'lib/**/*', // Ignore built files.
     '.eslintrc.js',
   ],
-  plugins: [
-    '@typescript-eslint',
-    '@typescript-eslint/eslint-plugin',
-    'import',
-    'unused-imports',
-  ],
+  plugins: ['@typescript-eslint', '@typescript-eslint/eslint-plugin', 'import'],
   rules: {
     quotes: ['error', 'single'],
     'quote-props': 'off',
