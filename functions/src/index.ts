@@ -21,18 +21,20 @@ const env = nunjucks.configure(path.join(__dirname, '../templates'), {
   autoescape: true,
 })
 
-const apiBaseURL = process.env.API_BASE_URL_PRD
-const ORIGIN = 'https://itsusuru.com'
-const API_ORIGIN = 'https://asia-northeast1-itsusuru-686b1.cloudfunctions.net'
+const DOC_ORIGIN =
+  process.env.FUNCTIONS_EMULATOR === 'true'
+    ? (process.env.DOC_ORIGIN_FOR_EMULATOR as string)
+    : (process.env.DOC_ORIGIN as string)
 
-env.addGlobal('API_BASE_URL', apiBaseURL)
+env.addGlobal('API_BASE_PATH', '/api')
 
 const corsMiddleware = cors({
-  origin: [ORIGIN, API_ORIGIN],
+  origin: [DOC_ORIGIN],
 })
 
 // specify the region for your functions
-const region = 'asia-northeast1'
+const region =
+  process.env.FUNCTIONS_EMULATOR === 'true' ? 'us-central1' : 'asia-northeast1'
 
 const app = initializeApp({
   // AppOptionsにapiKeyがないが、公式のサンプルにはapiKeyがあるし、実際に使えるので無視する
@@ -114,10 +116,8 @@ export const createEvent = onRequestWrapper(async (req, res): Promise<void> => {
     .collection('events')
     .add(event)
     .then((docRef) => {
-      // TODO: 何故これが動いているのか調べる。APIサーバからのレスポンスでブラウザに別ドメインにリダイレクト実行できているのは何故
-      // TODO: オリジンを変数可する
-      const targetURL = `${ORIGIN}/event?eventId=${docRef.id}`
-      res.redirect(303, targetURL)
+      res.set('HX-Location', `/event?eventId=${docRef.id}`)
+      res.sendStatus(201)
     })
 })
 
@@ -134,8 +134,8 @@ export const updateEvent = onRequestWrapper(async (req, res): Promise<void> => {
     .doc(data.eventId)
     .set(event)
     .then(() => {
-      const targetURL = `${ORIGIN}/event?eventId=${data.eventId}`
-      res.redirect(303, targetURL)
+      res.set('HX-Location', `/event?eventId=${data.eventId}`)
+      res.sendStatus(201)
     })
 })
 
@@ -146,8 +146,6 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
     res.status(400).send('Bad Request')
     return
   }
-
-  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`
 
   const eventData = await db
     .collection('events')
@@ -210,7 +208,6 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
         responses: Object.values(participant.responses),
       }
     }),
-    url,
   })
 
   res.send(responseText)
@@ -327,15 +324,13 @@ export const responseEvent = onRequestWrapper(
         .doc(data.participantId)
         .set(response)
         .then(() => {
-          console.log('Document updated with ID: ', data.participantId)
-          const targetURL = `${ORIGIN}/event?eventId=${data.eventId}`
-          res.redirect(303, targetURL)
+          res.set('HX-Location', `/event?eventId=${data.eventId}`)
+          res.sendStatus(201)
         })
     } else {
       await participantsReference.add(response).then(() => {
-        console.log('Document written with ID: ', data.eventId)
-        const targetURL = `${ORIGIN}/event?eventId=${data.eventId}`
-        res.redirect(303, targetURL)
+        res.set('HX-Location', `/event?eventId=${data.eventId}`)
+        res.sendStatus(201)
       })
     }
   }

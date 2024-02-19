@@ -19,6 +19,32 @@
       ]
     }
   ],
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/",
+        "function": "fetchHome"
+      },
+      {
+        "source": "/event",
+        "function": "fetchEvent"
+      },
+      {
+        "source": "/edit",
+        "function": "fetchEdit"
+      },
+      {
+        "source": "/api/:functionName",
+        "function": ":functionName"
+      }
+    ]
+  },
   "emulators": {
     "functions": {
       "port": 5001
@@ -45,30 +71,12 @@
         {
           "source": "/edit",
           "function": "fetchEdit"
+        },
+        {
+          "source": "/api/:functionName",
+          "function": ":functionName"
         }
       ]
     }
-  },
-  "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/",
-        "function": "fetchHome"
-      },
-      {
-        "source": "/event",
-        "function": "fetchEvent"
-      },
-      {
-        "source": "/edit",
-        "function": "fetchEdit"
-      }
-    ]
   }
 }

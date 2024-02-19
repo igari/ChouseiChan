@@ -18,8 +18,9 @@
       <label>みんなにURLを共有しよう</label>
     </div>
     <div>
-      <input type="text" readonly value="{{ url }}"
-        _="on click call navigator.clipboard.writeText(me.value)"/>
+      <input type="text" readonly
+        _="on load put location.href into me.value
+           on click call navigator.clipboard.writeText(me.value)"/>
     </div>
   </section>
   <section>
@@ -55,10 +56,10 @@
   <section>
     <button
       hx-get="/edit?eventId={{event.id}}"
+      hx-push-url="true"
       hx-swap="outerHTML"
       hx-select=".wrapper"
       hx-target="closest .wrapper"
-      hx-push-url="true"
     >
       予定を入力
     </button>
