@@ -1,0 +1,86 @@
+{% extends "components/layout.njk" %}
+
+{% block title %}{{event.name}} | イツスル | 日程調整ツール{% endblock %}
+
+{% block content %}
+  <div>
+    <h2>{{ name }}</h2>
+    <nav>
+      <ul>
+        <li>
+          <a href="/?eventId={{ event.id }}">編集</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <form
+    hx-post="{{API_BASE_URL}}/responseEvent"
+    hx-swap="outerHTML"
+    hx-select=".wrapper"
+    hx-target="closest .wrapper"
+    hx-push-url="true"
+  >
+    <section>
+      <input type="text"
+          name="name"
+          placeholder="名前を入力してね"
+          {% if participant %}value="{{ participant.name }}"{% endif %}
+          required/>
+    </section>
+    <section>
+      <ul class="candidate-date">
+        {% if participant %}
+          {% for c in event.candidateDates %}
+            <li>
+              <time datetime="{{ c.date }}T{{ c.time }}">
+                {{ c.date }}
+                {{ c.time }}
+              </time>
+              <ul>
+                <li>
+                  <input type="radio" name="responses[{{c.date}}T{{ c.time}}]" value="YES" 
+                    {% if participant.responses[loop.index0] ==='YES' %}checked{% endif %}/> ◯
+                </li>
+                <li>
+                  <input type="radio" name="responses[{{ c.date }}T{{c.time}}]" value="MAYBE" 
+                    {% if participant.responses[loop.index0] === 'MAYBE' %}checked{%endif %}/> △
+                </li>
+                <li>
+                  <input type="radio" name="responses[{{ c.date }}T{{c.time}}]" value="NO"
+                    {% if participant.responses[loop.index0] === 'NO' %}checked{%endif %}/> ✕
+                </li>
+              </ul>
+            </li>
+          {% endfor %}
+        {% else %}
+          {% for c in event.candidateDates %}
+            <li>
+              <time datetime="{{ c.date }}T{{ c.time }}">
+                {{ c.date }}
+                {{ c.time }}
+              </time>
+              <ul>
+                <li>
+                  <input type="radio" name="responses[{{c.date}}T{{c.time}}]" value="YES"/> ◯
+                </li>
+                <li>
+                  <input type="radio" name="responses[{{ c.date }}T{{ c.time}}]" value="MAYBE"/> △
+                </li>
+                <li>
+                  <input type="radio" name="responses[{{ c.date }}T{{ c.time}}]" value="NO" checked/> ✕
+                </li>
+              </ul>
+            </li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </section>
+    <footer>
+      <button type="submit">送信</button>
+    </footer>
+    <input type="hidden" name="eventId" value="{{ event.id }}"/>
+    {% if participant %}
+      <input type="hidden" name="participantId" value="{{ participant.id }}"/>
+    {% endif %}
+  </form>
+{% endblock %}

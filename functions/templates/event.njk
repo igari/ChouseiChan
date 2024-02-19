@@ -1,53 +1,66 @@
-<main>
-  <h1>{{ name }}</h1>
-  <section>
-    <label>みんなにURLを共有しよう</label>
-    <input type="text" readonly value="{{ currentURL }}" />
-  </section>
-  <form
-    hx-post="http://127.0.0.1:5001/itsusuru-686b1/us-central1/responseEvent"
-  >
-    <section>
-      <input type="text" name="name" placeholder="名前を入力してね" required />
-    </section>
-    <section>
-      <ul class="candidate-date">
-        {% for c in candidateDates %}
+{% extends "components/layout.njk" %}
+
+{% block title %}{{event.name}} | イツスル | 日程調整ツール{% endblock %}
+
+{% block content %}
+  <div>
+    <h2>{{ event.name }}</h2>
+    <nav>
+      <ul>
         <li>
-          <time datetime="{{ c.date }}T{{ c.time }}"
-            >{{ c.date }} {{ c.time }}</time
-          >
-          <ul>
-            <li>
-              <input
-                type="radio"
-                name="responses[{{ c.date }}T{{ c.time }}]"
-                value="YES"
-              />◯
-            </li>
-            <li>
-              <input
-                type="radio"
-                name="responses[{{ c.date }}T{{ c.time }}]"
-                value="MAYBE"
-              />△
-            </li>
-            <li>
-              <input
-                type="radio"
-                name="responses[{{ c.date }}T{{ c.time }}]"
-                value="NO"
-                checked
-              />✕
-            </li>
-          </ul>
+          <a href="/?eventId={{ event.id }}">編集</a>
         </li>
-        {% endfor %}
       </ul>
-    </section>
-    <footer>
-      <button type="submit">送信</button>
-    </footer>
-    <input type="hidden" name="eventId" value="{{ eventId }}" />
-  </form>
-</main>
+    </nav>
+  </div>
+  <section>
+    <div>
+      <label>みんなにURLを共有しよう</label>
+    </div>
+    <div>
+      <input type="text" readonly value="{{ url }}"
+        _="on click call navigator.clipboard.writeText(me.value)"/>
+    </div>
+  </section>
+  <section>
+    <table>
+      <tr>
+        <th></th>
+        {% for c in event.candidateDates %}
+          <th>{{ c.date }}<br/>{{ c.time }}</th>
+        {% endfor %}
+      </tr>
+      {% if participants.length > 0 %}
+        {% for p in participants %}
+          <tr>
+            <th>
+              <a href="/edit?eventId={{event.id}}&participantId={{ p.id }}">
+                {{ p.name }}
+              </a>
+            </th>
+            {% for r in p.responses %}
+              <td>{{ r }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="{{ event.candidateDates.length + 1 }}">
+            早速予定を入力しよう
+          </td>
+        </tr>
+      {% endif %}
+    </table>
+  </section>
+  <section>
+    <button
+      hx-get="/edit?eventId={{event.id}}"
+      hx-swap="outerHTML"
+      hx-select=".wrapper"
+      hx-target="closest .wrapper"
+      hx-push-url="true"
+    >
+      予定を入力
+    </button>
+  </section>
+{% endblock %}

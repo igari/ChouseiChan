@@ -1,22 +1,19 @@
 {
   "folders": [
-	{
-		"path": "."
-	},
-	{
-		"path": "functions"
-	}
-],
+    {
+      "path": ".",
+    },
+    {
+      "path": "functions",
+    },
+  ],
   "settings": {
     "eslint.run": "onSave",
     "eslint.validate": ["javascript", "typescript"],
     "eslint.format.enable": true,
     "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": "explicit"
+      "source.fixAll.eslint": "explicit",
     },
-    "mustache.delimiters": {
-      "left": "{{",
-      "right": "}}"
-    }
-  }
+    "cSpell.words": ["autoescape", "predeploy"],
+  },
 }

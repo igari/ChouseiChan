@@ -1,0 +1,37 @@
+{% if event %}
+  {% set EDIT_EVENT_PATH = "/updateEvent" %}
+{% else %}
+  {% set EDIT_EVENT_PATH = "/createEvent" %}
+{% endif %}
+
+{% extends "components/layout.njk" %}
+
+{% block title %}イツスル | 日程調整ツール{% endblock %}
+
+{% block content %}
+  <section>
+    <form id="form-create-event" hx-post="{{API_BASE_URL}}{{ EDIT_EVENT_PATH }}" hx-ext="json-enc" hx-swap="outerHTML" hx-select=".wrapper" hx-target="closest .wrapper" hx-push-url="true">
+      <div>
+        <input type="text" id="event-name" name="name" 
+                {% if event %}value="{{ event.name }}"{% endif %}
+                placeholder="イベント名を入力してね" required="required"/>
+      </div>
+      <div>
+        {% if event %}
+          <input id="datepicker" name="candidateDates" value="{{ event.candidateDates }}" hidden="hidden" required="required"/>
+        {% else %}
+          <input id="datepicker" name="candidateDates" hidden="hidden" required="required"/>
+        {% endif %}
+      </div>
+      <div>
+        <button type="submit">
+          {%- if event -%}イベント更新{%- else -%}イベント作成{%- endif -%}
+          <img src="https://htmx.org/img/bars.svg" class="htmx-indicator" alt="loading..."/>
+        </button>
+      </div>
+      {% if event %}
+        <input type="hidden" name="eventId" value="{{ event.id }}"/>
+      {% endif %}
+    </form>
+  </section>
+{% endblock %}

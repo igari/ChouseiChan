@@ -21,14 +21,16 @@ module.exports = {
     ecmaVersion: 2021,
   },
   ignorePatterns: [
-    '/lib/**/*', // Ignore built files.
+    'lib/**/*', // Ignore built files.
+    '.eslintrc.js',
   ],
-  plugins: ['@typescript-eslint', 'import'],
+  plugins: ['@typescript-eslint', '@typescript-eslint/eslint-plugin', 'import'],
   rules: {
     quotes: ['error', 'single'],
     'quote-props': 'off',
     'import/no-unresolved': 0,
+    'import/order': 'error',
     indent: ['error', 2],
     'object-curly-spacing': ['error', 'always'],
   },
-};
+}
