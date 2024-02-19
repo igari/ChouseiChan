@@ -38,6 +38,10 @@
       {
         "source": "/edit",
         "function": "fetchEdit"
+      },
+      {
+        "source": "/api/:functionName",
+        "function": ":functionName"
       }
     ]
   },
@@ -67,6 +71,10 @@
         {
           "source": "/edit",
           "function": "fetchEdit"
+        },
+        {
+          "source": "/api/:functionName",
+          "function": ":functionName"
         }
       ]
     }
