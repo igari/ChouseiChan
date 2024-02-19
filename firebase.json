@@ -19,6 +19,28 @@
       ]
     }
   ],
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/",
+        "function": "fetchHome"
+      },
+      {
+        "source": "/event",
+        "function": "fetchEvent"
+      },
+      {
+        "source": "/edit",
+        "function": "fetchEdit"
+      }
+    ]
+  },
   "emulators": {
     "functions": {
       "port": 5001
@@ -48,27 +70,5 @@
         }
       ]
     }
-  },
-  "hosting": {
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/",
-        "function": "fetchHome"
-      },
-      {
-        "source": "/event",
-        "function": "fetchEvent"
-      },
-      {
-        "source": "/edit",
-        "function": "fetchEdit"
-      }
-    ]
   }
 }
