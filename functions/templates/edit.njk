@@ -14,11 +14,10 @@
     </nav>
   </div>
   <form
-    hx-post="{{API_ORIGIN}}/responseEvent"
+    hx-post="{{API_BASE_PATH}}/responseEvent"
     hx-swap="outerHTML"
     hx-select=".wrapper"
     hx-target="closest .wrapper"
-    hx-push-url="true"
   >
     <section>
       <input type="text"
