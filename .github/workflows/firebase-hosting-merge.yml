@@ -15,10 +15,18 @@ jobs:
         uses: actions/setup-node@v4.0.2
         with:
           node-version: 20
-      - run: |
+      - name: Install dependencies and build
+        run: |
           cd functions
           npm ci
           npm run build
+      - name: Deploy to Firebase Functions and Firestore
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions,firestore
+        env:
+          GCP_SA_KEY: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ITSUSURU_686B1 }}'
+          PROJECT_ID: itsusuru-686b1
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0.7.1
         with:
