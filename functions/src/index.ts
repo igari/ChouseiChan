@@ -16,22 +16,17 @@ import {
   ResponseEventRequestParams,
   UpdateEventRequestParams,
 } from './type'
-import 'dotenv/config'
 
 const env = nunjucks.configure(path.join(__dirname, '../templates'), {
   autoescape: true,
 })
 
-const isProduction = process.env.NODE_ENV === 'production'
-
-const apiBaseURL = isProduction
-  ? process.env.API_BASE_URL_DEV
-  : process.env.API_BASE_URL_PRD
+const apiBaseURL = process.env.API_BASE_URL_PRD
 
 env.addGlobal('API_BASE_URL', apiBaseURL)
 
 const corsMiddleware = cors({
-  origin: isProduction ? ['https://itsusuru.com'] : ['http://127.0.0.1:5000'],
+  origin: ['https://itsusuru.com', 'http://127.0.0.1:5000'],
   optionsSuccessStatus: 200, // TODO: 意味を調べる
   credentials: true, // TODO: 意味を調べる
 })
