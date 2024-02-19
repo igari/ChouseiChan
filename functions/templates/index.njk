@@ -10,7 +10,8 @@
 
 {% block content %}
   <section>
-    <form id="form-create-event" hx-post="{{API_BASE_URL}}{{ EDIT_EVENT_PATH }}" hx-ext="json-enc" hx-swap="outerHTML" hx-select=".wrapper" hx-target="closest .wrapper" hx-push-url="true">
+    <form id="form-create-event" hx-post="{{API_ORIGIN}}{{ EDIT_EVENT_PATH }}" hx-ext="json-enc"
+          hx-swap="outerHTML" hx-select=".wrapper" hx-target="closest .wrapper" hx-push-url="true">
       <div>
         <input type="text" id="event-name" name="name" 
                 {% if event %}value="{{ event.name }}"{% endif %}
