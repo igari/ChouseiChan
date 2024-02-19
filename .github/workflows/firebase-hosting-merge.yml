@@ -23,9 +23,9 @@ jobs:
       - name: Deploy to Firebase Functions and Firestore
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only functions,firestore
+          args: deploy --only functions,firestore --message \"${{ github.event.head_commit.message }}\"
         env:
-          GCP_SA_KEY: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ITSUSURU_686B1 }}'
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ITSUSURU_686B1 }}
           PROJECT_ID: itsusuru-686b1
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0.7.1
