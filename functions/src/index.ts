@@ -16,7 +16,6 @@ import {
   ResponseEventRequestParams,
   UpdateEventRequestParams,
 } from './type'
-import 'dotenv/config'
 
 const env = nunjucks.configure(path.join(__dirname, '../templates'), {
   autoescape: true,
