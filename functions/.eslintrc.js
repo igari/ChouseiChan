@@ -37,15 +37,5 @@ module.exports = {
     'import/order': 'error',
     indent: ['error', 2],
     'object-curly-spacing': ['error', 'always'],
-    'unused-imports/no-unused-imports': 'error',
-    'unused-imports/no-unused-vars': [
-      'error',
-      {
-        vars: 'all',
-        varsIgnorePattern: '^_',
-        args: 'after-used',
-        argsIgnorePattern: '^_',
-      },
-    ],
   },
 }

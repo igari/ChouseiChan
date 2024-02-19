@@ -1,6 +1,5 @@
 // import { logger } from 'firebase-functions';//TODO loggerの使い方を調べる
 import path from 'node:path'
-import { config } from 'firebase-functions'
 import { HttpsFunction, Request, onRequest } from 'firebase-functions/v2/https'
 import cors from 'cors'
 import express from 'express'
@@ -23,12 +22,7 @@ const env = nunjucks.configure(path.join(__dirname, '../templates'), {
   autoescape: true,
 })
 
-env.addGlobal(
-  'API_BASE_URL',
-  process.env.NODE_ENV === 'production'
-    ? process.env.API_BASE_URL_PRD
-    : process.env.API_BASE_URL_DEV
-)
+env.addGlobal('API_BASE_URL', process.env.API_BASE_URL_DEV)
 
 const corsMiddleware = cors({
   origin: ['https://itsusuru.com', 'http://127.0.0.1:5000'],
@@ -36,19 +30,14 @@ const corsMiddleware = cors({
   credentials: true,
 })
 
-const isProduction = process.env.NODE_ENV === 'production'
-
 // specify the region for your functions
-const region = isProduction ? 'asia-northeast1' : undefined
+const region = 'asia-northeast1'
 
 const app = initializeApp({
   // AppOptionsにapiKeyがないが、公式のサンプルにはapiKeyがあるし、実際に使えるので無視する
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  apiKey:
-    process.env.NODE_ENV === 'production'
-      ? config().api.key
-      : process.env.API_KEY,
+  apiKey: process.env.API_KEY,
   authDomain: 'itsusuru-686b1.firebaseapp.com',
   projectId: 'itsusuru-686b1',
   storageBucket: 'itsusuru-686b1.appspot.com',
