@@ -4,15 +4,15 @@ let fp = null
 
 document.body.addEventListener('htmx:configRequest', function (event) {
   const url = event.detail.path
-  // TODO: refactor: if last string is slash, it's breakable
-  switch (url.split('/').at(-1)) {
-    case 'createEvent':
-    case 'updateEvent': {
+  switch (url) {
+    case '/api/createEvent':
+    case '/api/updateEvent': {
       const values = htmx.values(htmx.find('#form-create-event'))
       const candidateDates = values.candidateDates
-        .split(',')
+        .split(', ')
+        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
         .map((candidateDate) => {
-          const [date, time] = candidateDate.trim().split(/\s/)
+          const [date, time] = candidateDate.trim().split('T')
           return { date, time }
         })
       // Override the request parameters with the candidate dates
@@ -61,6 +61,7 @@ function initFlatpickr() {
     allowInput: false,
     locale: 'ja',
     minuteIncrement: 15,
+    dateFormat: 'Y-m-d\\TH:i',
     defaultDate,
   })
 }

@@ -39,8 +39,9 @@
                 {{ p.name }}
               </a>
             </th>
-            {% for r in p.responses %}
-              <td>{{ r }}</td>
+
+            {% for c in event.candidateDates %}
+              <td>{{p.responses[c.date ~ "T" ~ c.time]}}</td>
             {% endfor %}
           </tr>
         {% endfor %}
