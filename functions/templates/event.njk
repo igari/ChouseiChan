@@ -1,6 +1,6 @@
 {% extends "components/layout.njk" %}
 
-{% block title %}{{event.name}} | イツスル | 日程調整ツール{% endblock %}
+{% block title %}{{ event.name }} | イツスル | 日程調整ツール{% endblock %}
 
 {% block content %}
   <div>
@@ -41,7 +41,9 @@
             </th>
 
             {% for c in event.candidateDates %}
-              <td>{{p.responses[c.date ~ "T" ~ c.time]}}</td>
+              <td>
+                {{p.responses[c.date ~ "T" ~ c.time]}}
+              </td>
             {% endfor %}
           </tr>
         {% endfor %}
