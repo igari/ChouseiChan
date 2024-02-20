@@ -11,6 +11,7 @@ import nunjucks from 'nunjucks'
 import {
   CreateEventRequestParams,
   EventData,
+  EventDataWithId,
   ParticipantData,
   ParticipantDataWithId,
   ResponseEventRequestParams,
@@ -151,11 +152,15 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
     .collection('events')
     .doc(eventId)
     .get()
-    .then(async (docSnapshot) => {
-      if (docSnapshot.exists) {
+    .then(async (docRef) => {
+      if (docRef.exists) {
         console.log('Document data retrieved with ID: ', eventId)
-
-        const event = docSnapshot.data() as EventData
+        const data = docRef.data() as EventData
+        const event: EventDataWithId = {
+          id: docRef.id,
+          name: data.name,
+          candidateDates: data.candidateDates,
+        }
 
         return event
       } else {
@@ -197,23 +202,15 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
   ])
 
   const responseText = nunjucks.render('event.njk', {
-    event: {
-      id: eventId,
-      name: event.name,
-      candidateDates: event.candidateDates,
-    },
-    participants: participants.map((participant) => {
-      return {
-        ...participant,
-        responses: Object.values(participant.responses),
-      }
-    }),
+    event,
+    participants,
   })
 
   res.send(responseText)
 })
 
 export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
+  // TODO: add type to query
   const eventId = (req.query.eventId as string) || ''
   const participantId = (req.query.participantId as string) || ''
 
@@ -307,14 +304,13 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
 
 export const responseEvent = onRequestWrapper(
   async (req, res): Promise<void> => {
-    const data = req.body
+    const data = req.body as ResponseEventRequestParams
 
     const eventReference = db.collection('events').doc(data.eventId)
 
     const participantsReference = eventReference.collection('participants')
 
-    const response: ResponseEventRequestParams = {
-      event: eventReference,
+    const response = {
       name: data.name,
       responses: data.responses,
     }

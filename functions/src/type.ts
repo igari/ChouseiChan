@@ -1,14 +1,12 @@
-import {
-  DocumentData,
-  DocumentReference,
-  FieldValue,
-} from 'firebase-admin/firestore'
+import { FieldValue } from 'firebase-admin/firestore'
 
 type ResponseType = 'YES' | 'NO' | 'MAYBE'
 
 export interface ParticipantData {
   name: string
-  responses: { [datetime: string]: ResponseType }[]
+  responses: {
+    [datetime: string]: ResponseType
+  }
 }
 
 export interface ParticipantDataWithId extends ParticipantData {
@@ -24,6 +22,9 @@ export interface EventData {
   name: string
   candidateDates: CandidateDate[]
 }
+export interface EventDataWithId extends EventData {
+  id: string
+}
 
 export interface CreateEventRequestParams extends EventData {
   createdAt: FieldValue
@@ -33,6 +34,11 @@ export interface UpdateEventRequestParams extends EventData {
   eventId: string
 }
 
-export interface ResponseEventRequestParams extends ParticipantData {
-  event: DocumentReference<DocumentData>
+export interface ResponseEventRequestParams {
+  eventId: string
+  participantId?: string
+  name: string
+  responses: {
+    [datetime: string]: ResponseType
+  }
 }
