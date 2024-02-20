@@ -280,11 +280,7 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
         candidateDates: event.candidateDates,
       },
       participants,
-      participant: {
-        id: participant.id,
-        name: participant.name,
-        responses: Object.values(participant.responses),
-      },
+      participant,
     })
 
     res.send(responseText)
