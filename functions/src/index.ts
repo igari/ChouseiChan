@@ -105,11 +105,14 @@ export const fetchHome = onRequestWrapper(async (req, res): Promise<void> => {
 })
 
 export const createEvent = onRequestWrapper(async (req, res): Promise<void> => {
-  const data = req.body as EventData
+  const data = req.body as CreateEventRequestParams
 
-  const event: CreateEventRequestParams = {
+  const event: EventData = {
     name: data.name,
-    candidateDates: data.candidateDates,
+    candidateDates: data.candidateDates.split(/\s*,\s*/).map((datetime) => {
+      const [date, time] = datetime.split('T')
+      return { date, time }
+    }),
     createdAt: FieldValue.serverTimestamp(),
   }
 

@@ -16,7 +16,7 @@
 
 {% block content %}
   <section>
-    <form id="form-create-event" hx-post="{{API_BASE_PATH}}{{ ACTION_PATH }}" hx-ext="json-enc"
+    <form id="form-create-event" hx-post="{{API_BASE_PATH}}{{ ACTION_PATH }}"
           hx-swap="outerHTML" hx-select=".wrapper" hx-target="closest .wrapper">
       <div>
         <input type="text" id="event-name" name="name" 

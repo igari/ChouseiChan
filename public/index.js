@@ -1,29 +1,8 @@
-htmx.logAll()
+if (location.hostname === 'localhost') {
+  htmx.logAll()
+}
 
 let fp = null
-
-document.body.addEventListener('htmx:configRequest', function (event) {
-  const url = event.detail.path
-  switch (url) {
-    case '/api/createEvent':
-    case '/api/updateEvent': {
-      const values = htmx.values(htmx.find('#form-create-event'))
-      const candidateDates = values.candidateDates
-        .split(', ')
-        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-        .map((candidateDate) => {
-          const [date, time] = candidateDate.trim().split('T')
-          return { date, time }
-        })
-      // Override the request parameters with the candidate dates
-      event.detail.parameters['candidateDates'] = candidateDates
-      // TODO: improve behavior
-      if (fp) fp.destroy()
-      break
-    }
-  }
-})
-
 // Function to initialize any JavaScript after HTMX content swap
 function initDynamicContent() {
   // If you have any dynamic content that needs JS initialization, do it here.
@@ -51,7 +30,7 @@ window.addEventListener('popstate', async function (event) {
 
 function initFlatpickr() {
   const input = document.getElementById('datepicker')
-  const defaultDate = input.value.split(',').map((datetime) => datetime.trim())
+  const defaultDate = input.value.split(/\s*,\s*/).map((datetime) => datetime)
   fp = flatpickr(input, {
     inline: true,
     mode: 'multiple',
