@@ -21,13 +21,15 @@ export interface CandidateDate {
 export interface EventData {
   name: string
   candidateDates: CandidateDate[]
+  createdAt?: FieldValue
 }
 export interface EventDataWithId extends EventData {
   id: string
 }
 
-export interface CreateEventRequestParams extends EventData {
-  createdAt: FieldValue
+export interface CreateEventRequestParams {
+  name: string
+  candidateDates: string
 }
 
 export interface UpdateEventRequestParams extends EventData {
