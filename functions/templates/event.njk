@@ -41,8 +41,14 @@
             </th>
 
             {% for c in event.candidateDates %}
-              <td>
-                {{p.responses[c.date ~ "T" ~ c.time]}}
+              <td align="center">
+                {% if p.responses[c.date ~ "T" ~ c.time] === 'YES' -%}
+                  ◯
+                {%- elseif p.responses[c.date ~ "T" ~ c.time] === 'MAYBE' -%}
+                  △
+                {%- elseif p.responses[c.date ~ "T" ~ c.time] === 'NO' -%}
+                  ✕
+                {%- endif %}
               </td>
             {% endfor %}
           </tr>
