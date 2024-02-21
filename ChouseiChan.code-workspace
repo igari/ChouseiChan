@@ -8,7 +8,7 @@
     },
   ],
   "settings": {
-    "eslint.run": "onSave",
+    "eslint.run": "onType",
     "eslint.validate": ["javascript", "typescript"],
     "eslint.format.enable": true,
     "editor.codeActionsOnSave": {
