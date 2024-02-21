@@ -128,15 +128,70 @@ export const createEvent = onRequestWrapper(async (req, res): Promise<void> => {
 export const updateEvent = onRequestWrapper(async (req, res): Promise<void> => {
   const data = req.body as UpdateEventRequestParams
 
-  const event: EventData = {
+  const newEvent: EventData = {
     name: data.name,
     candidateDates: data.candidateDates,
+  }
+
+  const eventReference = db.collection('events').doc(data.eventId)
+
+  const currentEvent: EventDataWithId = await eventReference
+    .get()
+    .then(async (docRef) => {
+      if (docRef.exists) {
+        const data = docRef.data() as EventData
+        const event: EventDataWithId = {
+          id: docRef.id,
+          name: data.name,
+          candidateDates: data.candidateDates,
+        }
+        return event
+      } else {
+        const errorMessage = `No document found with ID: ${data.eventId}`
+        console.error(errorMessage)
+        res.sendStatus(404)
+        return Promise.reject(new Error(errorMessage))
+      }
+    })
+
+  // 削除された候補日を取得
+  const removedCandidateDates = currentEvent.candidateDates.filter(
+    (candidateDate) => {
+      return !newEvent.candidateDates.some((newCandidateDate) => {
+        return (
+          newCandidateDate.date === candidateDate.date &&
+          newCandidateDate.time === candidateDate.time
+        )
+      })
+    }
+  )
+
+  if (removedCandidateDates.length) {
+    // 特定のイベントに関連する参加者のコレクションを取得
+    await eventReference
+      .collection('participants')
+      .get() // 参加者のコレクション全体を取得
+      .then((participantRefs) => {
+        // 取得した参加者のコレクションに対して処理を行う
+        // 参加者のコレクション内の各ドキュメント（参加者）に対して処理を行う
+        participantRefs.forEach((participantRef) => {
+          // 削除する候補日の各日付に対して処理を行う
+          removedCandidateDates.forEach((removedCandidateDate) => {
+            const deleteKey = `responses.${removedCandidateDate.date}T${removedCandidateDate.time}`
+            // 参加者のドキュメントを更新
+            participantRef.ref.update({
+              // 更新するフィールドを指定（削除する候補日に対応するレスポンスフィールド）
+              [deleteKey]: FieldValue.delete(), // 指定したフィールドの値を削除
+            })
+          })
+        })
+      })
   }
 
   await db
     .collection('events')
     .doc(data.eventId)
-    .set(event)
+    .set(newEvent)
     .then(() => {
       res.set('HX-Location', `/event?eventId=${data.eventId}`)
       res.sendStatus(201)
@@ -151,32 +206,28 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
     return
   }
 
-  const eventData = await db
-    .collection('events')
-    .doc(eventId)
-    .get()
-    .then(async (docRef) => {
-      if (docRef.exists) {
-        console.log('Document data retrieved with ID: ', eventId)
-        const data = docRef.data() as EventData
-        const event: EventDataWithId = {
-          id: docRef.id,
-          name: data.name,
-          candidateDates: data.candidateDates,
-        }
+  const eventReference = db.collection('events').doc(eventId)
 
-        return event
-      } else {
-        const errorMessage = `No document found with ID: ${eventId}`
-        console.error(errorMessage)
-        res.sendStatus(404)
-        return Promise.reject(new Error(errorMessage))
+  const eventData = await eventReference.get().then(async (docRef) => {
+    if (docRef.exists) {
+      console.log('Document data retrieved with ID: ', eventId)
+      const data = docRef.data() as EventData
+      const event: EventDataWithId = {
+        id: docRef.id,
+        name: data.name,
+        candidateDates: data.candidateDates,
       }
-    })
 
-  const eventParticipantsData = await db
-    .collection('events')
-    .doc(eventId)
+      return event
+    } else {
+      const errorMessage = `No document found with ID: ${eventId}`
+      console.error(errorMessage)
+      res.sendStatus(404)
+      return Promise.reject(new Error(errorMessage))
+    }
+  })
+
+  const eventParticipantsData = await eventReference
     .collection('participants')
     .get()
     .then((querySnapshot) => {
@@ -221,29 +272,24 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
     res.status(400).send('Bad Request')
     return
   }
+  const eventReference = db.collection('events').doc(eventId)
 
-  const eventData = await db
-    .collection('events')
-    .doc(eventId)
-    .get()
-    .then(async (docSnapshot) => {
-      if (docSnapshot.exists) {
-        console.log('Document data retrieved with ID: ', eventId)
+  const eventData = await eventReference.get().then(async (docSnapshot) => {
+    if (docSnapshot.exists) {
+      console.log('Document data retrieved with ID: ', eventId)
 
-        const event = docSnapshot.data() as EventData
+      const event = docSnapshot.data() as EventData
 
-        return event
-      } else {
-        const errorMessage = `No document found with ID: ${eventId}`
-        console.error(errorMessage)
-        res.sendStatus(404)
-        return Promise.reject(new Error(errorMessage))
-      }
-    })
+      return event
+    } else {
+      const errorMessage = `No document found with ID: ${eventId}`
+      console.error(errorMessage)
+      res.sendStatus(404)
+      return Promise.reject(new Error(errorMessage))
+    }
+  })
 
-  const eventParticipantsData = await db
-    .collection('events')
-    .doc(eventId)
+  const eventParticipantsData = await eventReference
     .collection('participants')
     .get()
     .then((querySnapshot) => {
@@ -257,7 +303,6 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
         }
         participants.push(participant)
       })
-      console.log('Participants retrieved for event ID: ', eventId)
       return participants
     })
     .catch((error) => {
