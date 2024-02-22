@@ -42,5 +42,6 @@ function initFlatpickr() {
     minuteIncrement: 15,
     dateFormat: 'Y-m-d\\TH:i',
     defaultDate,
+    minDate: 'today',
   })
 }
