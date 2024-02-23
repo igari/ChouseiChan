@@ -259,6 +259,7 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
     eventParticipantsData,
   ])
 
+  // TODO: add type definition
   const responseText = nunjucks.render('event.njk', {
     event: {
       id: eventId,
@@ -276,7 +277,11 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
         const status = (() => {
           if (responseCountMap.YES === participants.length) {
             return 'primary'
-          } else if (responseCountMap.NO === 0) {
+          } else if (
+            responseCountMap.NO === 0 &&
+            responseCountMap.MAYBE > 0 &&
+            responseCountMap.YES > 0
+          ) {
             return 'secondary'
           } else {
             return 'never'
