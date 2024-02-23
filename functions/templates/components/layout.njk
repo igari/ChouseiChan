@@ -9,12 +9,14 @@
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/flatpickr.override.css"/>
+    <link rel="stylesheet" href="/css/flatpickr.css"/>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
-    <script src="index.js" defer="defer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nunjucks@3.2.4/browser/nunjucks.min.js"></script>
+    <script type="module" src="index.js" defer="defer"></script>
+
   </head>
   <body>
     <div class="wrapper">
@@ -22,6 +24,7 @@
         <h1 class="header__logo">
           <a href="/" hx-boost="true">イツスル</a>
         </h1>
+        <h2 class="header__tagline">日程調整を簡単に</h2>
       </header>
       <main>
         {% block main %}
@@ -34,5 +37,6 @@
         {% endblock %}
       </footer>
     </div>
+
   </body>
 </html>
