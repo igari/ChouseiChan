@@ -2,15 +2,14 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>
       {% block title %}{% endblock %}
     </title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="./css/styles.css"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+    <link rel="stylesheet" href="./css/flatpickr.override.css"/>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -19,8 +18,8 @@
   </head>
   <body>
     <div class="wrapper">
-      <header>
-        <h1>
+      <header class="header">
+        <h1 class="header__logo">
           <a href="/" hx-boost="true">イツスル</a>
         </h1>
       </header>

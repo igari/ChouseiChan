@@ -1,24 +1,80 @@
+/* 色のCSS変数定義 */
+:root {
+  --color-text-base: #54545e;
+  --color-border-base: #d6dcdf;
+  --color-bg-field: #fff;
+  --color-primary: #4693cb;
+  --color-text: #333;
+}
+
 /* General reset and base styles */
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+/* CSS */
+html {
+  font-family: Inter, sans-serif;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1; /* fix for Chrome */
+}
+@supports (font-variation-settings: normal) {
+  html {
+    font-family: InterVariable, sans-serif;
+  }
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+  line-height: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
 }
 
 html {
-  font-family: 'Inter', sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
   font-variation-settings: 'slnt' 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   line-height: 1.7;
+  font-size: 16px;
+  color: var(--color-text);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url('/image/aurola.png');
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
 }
 
 .htmx-indicator {
+  display: none;
   opacity: 0;
   transition: opacity 500ms ease-in;
 }
+
 .htmx-request .htmx-indicator {
+  display: inline;
   opacity: 1;
 }
+
 .htmx-request.htmx-indicator {
   opacity: 1;
 }
@@ -30,4 +86,90 @@ html {
 
 .flatpickr-calendar.inline {
   top: 0 !important;
+}
+
+.wrapper {
+  max-width: 599px;
+  min-width: 320px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.header {
+  display: flex;
+  height: 52px;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.header__logo {
+  display: flex;
+  padding: 0px 16px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1 0 0;
+  align-self: stretch;
+}
+
+.header__logo a {
+  display: block;
+  width: 121px;
+  height: 24px;
+  background: url('/image/logo.svg') left center no-repeat;
+  background-size: contain;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+main > section {
+  padding: 16px;
+}
+main > section > form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.catch-copy {
+  color: var(--color-text-base);
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 510;
+  line-height: normal;
+}
+
+input[type='text']:not([hidden]) {
+  display: flex;
+  padding: 12px 16px;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-base);
+  background: var(--color-bg-field);
+  width: 100%;
+}
+
+button {
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 8px;
+  background: var(--color-primary);
+  border: 0;
+  color: white;
+  width: 100%;
 }
