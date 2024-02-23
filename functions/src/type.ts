@@ -13,14 +13,12 @@ export interface ParticipantDataWithId extends ParticipantData {
   id: string
 }
 
-export interface CandidateDate {
-  date: string
-  time: string
-}
-
 export interface EventData {
   name: string
-  candidateDates: CandidateDate[]
+  candidateDates: string[]
+  candidateTimes: { [date: string]: string }
+  timeByDay: boolean
+  baseTime: string
   createdAt?: FieldValue
 }
 export interface EventDataWithId extends EventData {
@@ -30,12 +28,18 @@ export interface EventDataWithId extends EventData {
 export interface CreateEventRequestParams {
   name: string
   candidateDates: string
+  candidateTimes?: { [date: string]: string }
+  timeByDay?: string
+  baseTime?: string
 }
 
 export interface UpdateEventRequestParams {
   eventId: string
   name: string
   candidateDates: string
+  candidateTimes?: { [date: string]: string }
+  timeByDay?: string
+  baseTime?: string
 }
 
 export interface ResponseEventRequestParams {

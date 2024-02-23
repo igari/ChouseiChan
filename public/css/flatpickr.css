@@ -165,6 +165,7 @@
 
 .flatpickr-calendar.arrowTop:before,
 .flatpickr-calendar.arrowTop:after {
+  display: none !important; // override
   bottom: 100%;
 }
 
@@ -803,6 +804,7 @@ span.flatpickr-weekday {
 }
 
 .flatpickr-time {
+  display: none !important;
   text-align: center;
   outline: 0;
   display: block;

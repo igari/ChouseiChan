@@ -91,12 +91,21 @@ export const fetchHome = onRequestWrapper(async (req, res): Promise<void> => {
       event: {
         id: eventId,
         name: event.name,
-        candidateDates: event.candidateDates
-          .map(({ date, time }) => `${date} ${time}`)
-          .join(','),
+        candidateDates: event.candidateDates.join(', '),
+        candidateTimes: event.candidateTimes || {},
+        timeByDay: event.timeByDay,
+        baseTime: event.baseTime,
       },
     })
 
+    console.warn({
+      id: eventId,
+      name: event.name,
+      candidateDates: event.candidateDates.join(', '),
+      candidateTimes: event.candidateTimes,
+      timeByDay: event.timeByDay,
+      baseTime: event.baseTime,
+    })
     res.send(responseText)
   } else {
     const responseText = nunjucks.render('index.njk')
@@ -110,10 +119,10 @@ export const createEvent = onRequestWrapper(async (req, res): Promise<void> => {
 
   const event: EventData = {
     name: data.name,
-    candidateDates: data.candidateDates.split(/\s*,\s*/).map((datetime) => {
-      const [date, time] = datetime.split('T')
-      return { date, time }
-    }),
+    candidateDates: data.candidateDates.split(/\s*,\s*/),
+    candidateTimes: data.candidateTimes || {},
+    timeByDay: data.timeByDay === 'on',
+    baseTime: data.baseTime || '',
     createdAt: FieldValue.serverTimestamp(),
   }
 
@@ -131,10 +140,10 @@ export const updateEvent = onRequestWrapper(async (req, res): Promise<void> => {
 
   const newEvent: EventData = {
     name: data.name,
-    candidateDates: data.candidateDates.split(/\s*,\s*/).map((datetime) => {
-      const [date, time] = datetime.split('T')
-      return { date, time }
-    }),
+    candidateDates: data.candidateDates.split(/\s*,\s*/),
+    candidateTimes: data.candidateTimes || {},
+    timeByDay: data.timeByDay === 'on',
+    baseTime: data.baseTime || '',
   }
 
   const eventReference = db.collection('events').doc(data.eventId)
@@ -148,6 +157,9 @@ export const updateEvent = onRequestWrapper(async (req, res): Promise<void> => {
           id: docRef.id,
           name: data.name,
           candidateDates: data.candidateDates,
+          candidateTimes: data.candidateTimes || {},
+          timeByDay: data.timeByDay,
+          baseTime: data.baseTime,
         }
         return event
       } else {
@@ -162,10 +174,7 @@ export const updateEvent = onRequestWrapper(async (req, res): Promise<void> => {
   const removedCandidateDates = currentEvent.candidateDates.filter(
     (candidateDate) => {
       return !newEvent.candidateDates.some((newCandidateDate) => {
-        return (
-          newCandidateDate.date === candidateDate.date &&
-          newCandidateDate.time === candidateDate.time
-        )
+        return newCandidateDate === candidateDate
       })
     }
   )
@@ -181,7 +190,10 @@ export const updateEvent = onRequestWrapper(async (req, res): Promise<void> => {
         participantRefs.forEach((participantRef) => {
           // 削除する候補日の各日付に対して処理を行う
           removedCandidateDates.forEach((removedCandidateDate) => {
-            const deleteKey = `responses.${removedCandidateDate.date}T${removedCandidateDate.time}`
+            const time =
+              currentEvent.candidateTimes[removedCandidateDate] ||
+              currentEvent.baseTime
+            const deleteKey = `responses.${removedCandidateDate}T${time}`
             // 参加者のドキュメントを更新
             participantRef.ref.update({
               // 更新するフィールドを指定（削除する候補日に対応するレスポンスフィールド）
@@ -220,6 +232,9 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
         id: docRef.id,
         name: data.name,
         candidateDates: data.candidateDates,
+        candidateTimes: data.candidateTimes || {},
+        timeByDay: data.timeByDay,
+        baseTime: data.baseTime,
       }
 
       return event
@@ -264,9 +279,10 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
     event: {
       id: eventId,
       name: event.name,
-      candidateDates: event.candidateDates.map(({ date, time }) => {
+      candidateDates: event.candidateDates.map((date) => {
         const responseCountMap = participants.reduce(
           (acc, participant) => {
+            const time = event.candidateTimes[date] || event.baseTime
             const response = participant.responses[`${date}T${time}`]
             acc[response]++
             return acc
@@ -275,7 +291,10 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
         )
 
         const status = (() => {
-          if (responseCountMap.YES === participants.length) {
+          if (
+            participants.length > 0 &&
+            responseCountMap.YES === participants.length
+          ) {
             return 'primary'
           } else if (
             responseCountMap.NO === 0 &&
@@ -288,6 +307,8 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
           }
         })()
 
+        const time = event.candidateTimes[date] || event.baseTime
+
         return {
           key: `${date}T${time}`,
           date: format(new Date(`${date}T${time}`), 'M/d'),
@@ -295,6 +316,8 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
           status,
         }
       }),
+      timeByDay: event.timeByDay,
+      baseTime: event.baseTime,
     },
     participants,
   })
@@ -364,13 +387,16 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
       event: {
         id: eventId,
         name: event.name,
-        candidateDates: event.candidateDates.map(({ date, time }) => {
+        candidateDates: event.candidateDates.map((date) => {
+          const time = event.candidateTimes[date] || event.baseTime
           return {
             key: `${date}T${time}`,
             date: format(new Date(`${date}T${time}`), 'M/d'),
             time: format(new Date(`${date}T${time}`), 'H:mm'),
           }
         }),
+        timeByDay: event.timeByDay,
+        baseTime: event.baseTime,
       },
       participants,
       participant,
@@ -382,13 +408,16 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
       event: {
         id: eventId,
         name: event.name,
-        candidateDates: event.candidateDates.map(({ date, time }) => {
+        candidateDates: event.candidateDates.map((date) => {
+          const time = event.candidateTimes[date] || event.baseTime
           return {
             key: `${date}T${time}`,
             date: format(new Date(`${date}T${time}`), 'M/d'),
             time: format(new Date(`${date}T${time}`), 'H:mm'),
           }
         }),
+        timeByDay: event.timeByDay,
+        baseTime: event.baseTime,
       },
       participants,
     })

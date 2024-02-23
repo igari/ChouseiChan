@@ -14,10 +14,14 @@
     </nav>
   </div>
   <div class="form-field">
-    <label>みんなにURLを共有しよう</label>
+    <div class="form-field-header">
+      <label>タップしてURLを共有してね</label>
+      <div id="copyMessage" class="copy-message">コピーしました</div>
+    </div>
     <input type="text" readonly
-        _="on load put location.href into me.value
-           on click call navigator.clipboard.writeText(me.value)"/>
+      _="on load put location.href into me.value
+        on click call navigator.clipboard.writeText(me.value) then add .copy-message-show to #copyMessage
+        wait 3s then remove .copy-message-show from #copyMessage"/>
   </div>
   <div class="table-container">
     <table>
