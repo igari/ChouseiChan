@@ -2,9 +2,9 @@
 
 {% block title %}{{ event.name }} | イツスル | 日程調整ツール{% endblock %}
 
-{% block content %}
-  <div>
-    <h2>{{ name }}</h2>
+{% block main %}
+  <div class="event-header ">
+    <h2>{{ event.name }}</h2>
     <nav>
       <ul>
         <li>
@@ -14,39 +14,47 @@
     </nav>
   </div>
   <form
-    hx-post="{{API_BASE_PATH}}/responseEvent"
-    hx-swap="outerHTML"
-    hx-select=".wrapper"
-    hx-target="closest .wrapper"
-  >
-    <section>
+      id="edit-form"
+      hx-post="{{API_BASE_PATH}}/responseEvent"
+      hx-swap="outerHTML"
+      hx-select=".wrapper"
+      hx-target="closest .wrapper"
+      class="inherit-main"
+    >
+    <div>
       <input type="text"
           name="name"
           placeholder="名前を入力してね"
           {% if participant %}value="{{ participant.name }}"{% endif %}
           required/>
-    </section>
-    <section>
-      <ul class="candidate-date">
+    </div>
+    <div class="form-field">
+      <div>
+        選んで送信してね
+      </div>
+      <ul class="edit-candidate-dates">
         {% if participant %}
           {% for c in event.candidateDates %}
             <li>
-              <time datetime="{{ c.date }}T{{ c.time }}">
+              <time datetime="{{c.key }}">
                 {{ c.date }}
                 {{ c.time }}
               </time>
-              <ul>
+              <ul class="edit-candidate-dates__buttons">
                 <li>
-                  <input type="radio" name="responses[{{c.date}}T{{c.time}}]" value="YES" 
-                    {% if participant.responses[c.date ~ "T" ~ c.time] ==='YES' %}checked{% endif %}/> ◯
+                  <input type="radio" name="responses[{{c.key}}]" value="YES" 
+                    {% if participant.responses[c.key] ==='YES' %}checked{% endif %}/>
+                  <button>◯</button>
                 </li>
                 <li>
-                  <input type="radio" name="responses[{{c.date}}T{{c.time}}]" value="MAYBE" 
-                    {% if participant.responses[c.date ~ "T" ~ c.time] === 'MAYBE' %}checked{%endif %}/> △
+                  <input type="radio" name="responses[{{c.key}}]" value="MAYBE" 
+                    {% if participant.responses[c.key] === 'MAYBE' %}checked{%endif %}/>
+                  <button>△</button>
                 </li>
                 <li>
-                  <input type="radio" name="responses[{{c.date}}T{{c.time}}]" value="NO"
-                    {% if participant.responses[c.date ~ "T" ~ c.time] === 'NO' %}checked{%endif %}/> ✕
+                  <input type="radio" name="responses[{{c.key}}]" value="NO"
+                    {% if participant.responses[c.key] === 'NO' %}checked{%endif %}/>
+                  <button>✕</button>
                 </li>
               </ul>
             </li>
@@ -54,32 +62,36 @@
         {% else %}
           {% for c in event.candidateDates %}
             <li>
-              <time datetime="{{ c.date }}T{{ c.time }}">
+              <time datetime="{{c.key }}">
                 {{ c.date }}
                 {{ c.time }}
               </time>
-              <ul>
+              <ul class="edit-candidate-dates__buttons">
                 <li>
-                  <input type="radio" name="responses[{{c.date}}T{{c.time}}]" value="YES"/> ◯
+                  <input type="radio" name="responses[{{c.key}}]" value="YES"/>
+                  <button>◯</button>
                 </li>
                 <li>
-                  <input type="radio" name="responses[{{ c.date }}T{{ c.time}}]" value="MAYBE"/> △
+                  <input type="radio" name="responses[{{c.key}}]" value="MAYBE"/>
+                  <button>△</button>
                 </li>
                 <li>
-                  <input type="radio" name="responses[{{ c.date }}T{{ c.time}}]" value="NO" checked/> ✕
+                  <input type="radio" name="responses[{{c.key}}]" value="NO" checked/>
+                  <button>✕</button>
                 </li>
               </ul>
             </li>
           {% endfor %}
         {% endif %}
       </ul>
-    </section>
-    <footer>
-      <button type="submit">送信</button>
-    </footer>
+    </div>
     <input type="hidden" name="eventId" value="{{ event.id }}"/>
     {% if participant %}
       <input type="hidden" name="participantId" value="{{ participant.id }}"/>
     {% endif %}
   </form>
+{% endblock %}
+
+{% block footer %}
+  <button form="edit-form" type="submit">送信</button>
 {% endblock %}

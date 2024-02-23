@@ -4,12 +4,12 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <title>
-      {% block title %}{% endblock %}
+      {%- block title %}{% endblock -%}
     </title>
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-    <link rel="stylesheet" href="./css/styles.css"/>
-    <link rel="stylesheet" href="./css/flatpickr.override.css"/>
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/css/flatpickr.override.css"/>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -24,10 +24,15 @@
         </h1>
       </header>
       <main>
-        {% block content %}
+        {% block main %}
           <!-- Default content goes here if not overridden -->
         {% endblock %}
       </main>
+      <footer>
+        {% block footer %}
+          <!-- Default content goes here if not overridden -->
+        {% endblock %}
+      </footer>
     </div>
   </body>
 </html>

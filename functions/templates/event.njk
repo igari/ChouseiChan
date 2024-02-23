@@ -2,8 +2,8 @@
 
 {% block title %}{{ event.name }} | イツスル | 日程調整ツール{% endblock %}
 
-{% block content %}
-  <div>
+{% block main %}
+  <div class="event-header">
     <h2>{{ event.name }}</h2>
     <nav>
       <ul>
@@ -13,64 +13,78 @@
       </ul>
     </nav>
   </div>
-  <section>
-    <div>
-      <label>みんなにURLを共有しよう</label>
-    </div>
-    <div>
-      <input type="text" readonly
+  <div class="form-field">
+    <label>みんなにURLを共有しよう</label>
+    <input type="text" readonly
         _="on load put location.href into me.value
            on click call navigator.clipboard.writeText(me.value)"/>
-    </div>
-  </section>
-  <section>
+  </div>
+  <div class="table-container">
     <table>
-      <tr>
-        <th></th>
+      <colgroup>
+        <col/>
         {% for c in event.candidateDates %}
-          <th>{{ c.date }}<br/>{{ c.time }}</th>
+          {% if c.status === 'primary' %}
+            <col class="table-candidate-date-primary"/>
+          {% elif c.status === 'secondary' %}
+            <col class="table-candidate-date-secondary"/>
+          {% else %}
+            <col/>
+          {% endif %}
         {% endfor %}
-      </tr>
-      {% if participants.length > 0 %}
-        {% for p in participants %}
-          <tr>
-            <th>
-              <a href="/edit?eventId={{event.id}}&participantId={{ p.id }}">
-                {{ p.name }}
-              </a>
-            </th>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>なまえ</th>
+          {% for c in event.candidateDates %}
+            <th>{{ c.date }}<br/>{{ c.time }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% if participants.length > 0 %}
+          {% for p in participants %}
+            <tr>
+              <th>
+                <a href="/edit?eventId={{event.id}}&participantId={{ p.id }}">
+                  {{ p.name }}
+                </a>
+              </th>
 
-            {% for c in event.candidateDates %}
-              <td align="center">
-                {% if p.responses[c.date ~ "T" ~ c.time] === 'YES' -%}
+              {% for c in event.candidateDates %}
+                <td align="center">
+                  {% if p.responses[c.key] === 'YES' -%}
                   ◯
-                {%- elseif p.responses[c.date ~ "T" ~ c.time] === 'MAYBE' -%}
+                {%- elseif p.responses[c.key] === 'MAYBE' -%}
                   △
-                {%- elseif p.responses[c.date ~ "T" ~ c.time] === 'NO' -%}
+                {%- elseif p.responses[c.key] === 'NO' -%}
                   ✕
                 {%- endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td>-</td>
+            <td colspan="{{ event.candidateDates.length }}">
+                予定を入力すると参加可否が表示されるよ
               </td>
-            {% endfor %}
           </tr>
-        {% endfor %}
-      {% else %}
-        <tr>
-          <td colspan="{{ event.candidateDates.length + 1 }}">
-            早速予定を入力しよう
-          </td>
-        </tr>
-      {% endif %}
+        {% endif %}
+      </tbody>
     </table>
-  </section>
-  <section>
-    <button
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <button
       hx-get="/edit?eventId={{event.id}}"
       hx-push-url="true"
       hx-swap="outerHTML"
       hx-select=".wrapper"
       hx-target="closest .wrapper"
     >
-      予定を入力
-    </button>
-  </section>
+    予定を入力
+  </button>
 {% endblock %}
