@@ -255,6 +255,7 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
 }
 .event-header a::before {
   content: '';
@@ -384,14 +385,14 @@ table td {
   > input[type='radio'][value='YES']:checked
   + button {
   border-radius: 30px;
-  background: #7cd085;
+  background: var(--yes-button-active);
 }
 .edit-candidate-dates__buttons
   > li
   > input[type='radio'][value='MAYBE']:checked
   + button {
   border-radius: 30px;
-  background: var(--no-button-active);
+  background: var(--maybe-button-active);
 }
 .edit-candidate-dates__buttons
   > li
