@@ -117,7 +117,7 @@ body {
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  max-width: 599px;
+  max-width: 420px;
   min-width: 320px;
   margin-right: auto;
   margin-left: auto;
@@ -128,7 +128,7 @@ body {
 .wrapper > footer {
   flex: 0 0 auto;
 }
-@media (max-height: 1000px) and (max-width: 599px) {
+@media (max-height: 1000px) and (max-width: 420px) {
   html,
   body,
   .wrapper {
@@ -219,16 +219,22 @@ footer {
   line-height: normal;
 }
 
-input[type='text']:not([hidden]) {
+input[type='text'],
+input[type='time'] {
   display: flex;
-  padding: 12px 16px;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
   align-self: stretch;
   border-radius: 8px;
   border: 1px solid var(--color-border-base);
   background: var(--color-bg-field);
   width: 100%;
+}
+input[type='text'] {
+  padding: 12px 16px;
+}
+input[type='time'] {
+  padding: 6px 16px;
 }
 
 input[type='text']:read-only {
@@ -236,6 +242,10 @@ input[type='text']:read-only {
   border: 1px solid var(--color-border-base);
   background: var(--color-secondary);
   color: var(--color-text-white);
+}
+
+input[hidden] {
+  display: none !important;
 }
 
 button {
@@ -460,4 +470,10 @@ table td {
   flex-direction: column;
   align-items: stretch;
   gap: 8px;
+}
+
+.event-time-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
