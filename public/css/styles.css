@@ -1,19 +1,31 @@
-/* 色のCSS変数定義 */
 :root {
   --color-text-base: #54545e;
   --color-border-base: #d6dcdf;
   --color-bg-field: #fff;
   --color-primary: #4693cb;
   --color-text: #333;
+  --color-secondary: #455059;
+  --color-text-white: #fff;
+  --bg-table-header: #d6e7f3;
+  --color-thirdly: #acd1ec;
+  --no-button-active: #838b8f;
+  --maybe-button-active: #ffcd6b;
+  --yes-button-active: #7cd085;
 }
 
-/* General reset and base styles */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
-/* CSS */
+
+ul,
+ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
 html {
   font-family: Inter, sans-serif;
   font-feature-settings:
@@ -34,6 +46,14 @@ button {
   line-height: inherit;
 }
 
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+  color: var(--color-primary);
+}
+
 h1,
 h2,
 h3,
@@ -45,7 +65,7 @@ h6 {
 
 html {
   font-optical-sizing: auto;
-  font-weight: 500;
+  font-weight: 400;
   font-style: normal;
   font-variation-settings: 'slnt' 0;
   -webkit-font-smoothing: antialiased;
@@ -88,11 +108,30 @@ body {
   top: 0 !important;
 }
 
+html,
+body,
 .wrapper {
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   max-width: 599px;
   min-width: 320px;
   margin-right: auto;
   margin-left: auto;
+}
+
+.wrapper main {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+.wrapper header,
+.wrapper footer {
+  flex: 0 0 auto;
 }
 
 .header {
@@ -126,15 +165,30 @@ body {
   overflow: hidden;
 }
 
-main > section {
-  padding: 16px;
-}
-main > section > form {
+main {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 16px;
   align-items: stretch;
+  padding-right: 16px;
+  padding-left: 16px;
+  padding-bottom: 16px;
+}
+
+.inherit-main {
+  display: inherit;
+  flex-direction: inherit;
+  gap: inherit;
+  align-items: inherit;
+}
+
+footer {
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
 }
 
 .catch-copy {
@@ -160,6 +214,13 @@ input[type='text']:not([hidden]) {
   width: 100%;
 }
 
+input[type='text']:read-only {
+  border-radius: 8px;
+  border: 1px solid var(--color-border-base);
+  background: var(--color-secondary);
+  color: var(--color-text-white);
+}
+
 button {
   display: flex;
   padding: 16px;
@@ -172,4 +233,177 @@ button {
   border: 0;
   color: white;
   width: 100%;
+
+  border-radius: 50px;
+
+  /* TODO: add mixin or var */
+  background: linear-gradient(
+    273deg,
+    #68a3e0 4.95%,
+    var(--color-primary) 93.62%
+  );
+  box-shadow: 0px 4px 20px 0px rgb(104 151 224 / 50%);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-header a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.event-header a::before {
+  content: '';
+  background: url('/image/icon/edit.svg') left center no-repeat;
+  width: 16px;
+  height: 18px;
+  background-size: contain;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid var(--color-border-base);
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  line-height: 1.5;
+}
+
+table > thead {
+  background-color: var(--bg-table-header);
+}
+
+table th {
+  font-weight: normal;
+}
+table tr > th:first-of-type {
+  position: sticky;
+  left: 0;
+  white-space: nowrap;
+  border-left: 1px solid var(--color-border-base);
+}
+table tr > th:first-of-type::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 1px;
+  height: 100%;
+  background-color: var(--color-border-base);
+}
+
+table > thead > tr > th:first-of-type {
+  background-color: var(--bg-table-header);
+}
+table > tbody > tr > th:first-of-type {
+  background-color: white;
+}
+table th,
+table td {
+  padding: 8px;
+  border: 1px solid var(--color-border-base);
+  text-align: left;
+}
+
+.table-candidate-date-primary {
+  background-color: var(--yes-button-active);
+  color: white;
+}
+.table-candidate-date-secondary {
+  background-color: var(--maybe-button-active);
+  color: white;
+}
+
+.edit-candidate-dates {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.edit-candidate-dates > li {
+  display: flex;
+  padding: 8px 16px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  background: var(--bg-primary, rgba(255, 255, 255, 0.6));
+  box-shadow: 0px 0px 6px 0px rgba(18, 20, 21, 0.07);
+  backdrop-filter: blur(2px);
+}
+
+.edit-candidate-dates__buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-candidate-dates__buttons > li {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.edit-candidate-dates__buttons > li > input[type='radio'] {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.edit-candidate-dates__buttons > li > button {
+  border-radius: 30px;
+  background: var(--color-thirdly);
+
+  /* button shadow */
+  box-shadow: 0px 0px 6px 0px #c5d5de;
+}
+
+.edit-candidate-dates__buttons > li > input[type='radio']:checked + button {
+  /* button active shadow */
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.25) inset;
+}
+.edit-candidate-dates__buttons
+  > li
+  > input[type='radio'][value='YES']:checked
+  + button {
+  border-radius: 30px;
+  background: #7cd085;
+}
+.edit-candidate-dates__buttons
+  > li
+  > input[type='radio'][value='MAYBE']:checked
+  + button {
+  border-radius: 30px;
+  background: var(--no-button-active);
+}
+.edit-candidate-dates__buttons
+  > li
+  > input[type='radio'][value='NO']:checked
+  + button {
+  border-radius: 30px;
+  background: var(--no-button-active);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
 }

@@ -3,6 +3,7 @@ import path from 'node:path'
 import { HttpsFunction, Request, onRequest } from 'firebase-functions/v2/https'
 import cors from 'cors'
 import express from 'express'
+import { format } from 'date-fns'
 
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { initializeApp } from 'firebase-admin/app'
@@ -130,7 +131,10 @@ export const updateEvent = onRequestWrapper(async (req, res): Promise<void> => {
 
   const newEvent: EventData = {
     name: data.name,
-    candidateDates: data.candidateDates,
+    candidateDates: data.candidateDates.split(/\s*,\s*/).map((datetime) => {
+      const [date, time] = datetime.split('T')
+      return { date, time }
+    }),
   }
 
   const eventReference = db.collection('events').doc(data.eventId)
@@ -256,7 +260,37 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
   ])
 
   const responseText = nunjucks.render('event.njk', {
-    event,
+    event: {
+      id: eventId,
+      name: event.name,
+      candidateDates: event.candidateDates.map(({ date, time }) => {
+        const responseCountMap = participants.reduce(
+          (acc, participant) => {
+            const response = participant.responses[`${date}T${time}`]
+            acc[response]++
+            return acc
+          },
+          { YES: 0, MAYBE: 0, NO: 0 }
+        )
+
+        const status = (() => {
+          if (responseCountMap.YES === participants.length) {
+            return 'primary'
+          } else if (responseCountMap.NO === 0) {
+            return 'secondary'
+          } else {
+            return 'never'
+          }
+        })()
+
+        return {
+          key: `${date}T${time}`,
+          date: format(new Date(`${date}T${time}`), 'M/d'),
+          time: format(new Date(`${date}T${time}`), 'H:mm'),
+          status,
+        }
+      }),
+    },
     participants,
   })
 
@@ -325,7 +359,13 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
       event: {
         id: eventId,
         name: event.name,
-        candidateDates: event.candidateDates,
+        candidateDates: event.candidateDates.map(({ date, time }) => {
+          return {
+            key: `${date}T${time}`,
+            date: format(new Date(`${date}T${time}`), 'M/d'),
+            time: format(new Date(`${date}T${time}`), 'H:mm'),
+          }
+        }),
       },
       participants,
       participant,
@@ -337,7 +377,13 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
       event: {
         id: eventId,
         name: event.name,
-        candidateDates: event.candidateDates,
+        candidateDates: event.candidateDates.map(({ date, time }) => {
+          return {
+            key: `${date}T${time}`,
+            date: format(new Date(`${date}T${time}`), 'M/d'),
+            time: format(new Date(`${date}T${time}`), 'H:mm'),
+          }
+        }),
       },
       participants,
     })

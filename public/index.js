@@ -43,5 +43,7 @@ function initFlatpickr() {
     dateFormat: 'Y-m-d\\TH:i',
     defaultDate,
     minDate: 'today',
+    monthSelectorType: 'static',
+    static: true,
   })
 }

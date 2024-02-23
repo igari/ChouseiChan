@@ -32,8 +32,10 @@ export interface CreateEventRequestParams {
   candidateDates: string
 }
 
-export interface UpdateEventRequestParams extends EventData {
+export interface UpdateEventRequestParams {
   eventId: string
+  name: string
+  candidateDates: string
 }
 
 export interface ResponseEventRequestParams {
