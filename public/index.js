@@ -31,6 +31,10 @@ window.addEventListener('popstate', async function (event) {
   }
 })
 
+document.body.addEventListener('htmx:load', function (event) {
+  initDynamicContent()
+})
+
 // TODO: https://htmx.org/events/#htmx:validateUrl
 
 /***************************************************
