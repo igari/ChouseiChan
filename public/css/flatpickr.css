@@ -40,18 +40,6 @@
   -ms-touch-action: manipulation;
   touch-action: manipulation;
   background: var(--color-fp-white);
-  -webkit-box-shadow:
-    1px 0 0 var(--color-fp-grey-light),
-    -1px 0 0 var(--color-fp-grey-light),
-    0 1px 0 var(--color-fp-grey-light),
-    0 -1px 0 var(--color-fp-grey-light),
-    0 3px 13px var(--color-fp-calendar-shadow);
-  box-shadow:
-    1px 0 0 var(--color-fp-grey-light),
-    -1px 0 0 var(--color-fp-grey-light),
-    0 1px 0 var(--color-fp-grey-light),
-    0 -1px 0 var(--color-fp-grey-light),
-    0 3px 13px var(--color-fp-calendar-shadow);
   border: 1px solid var(--border-base, #D6DCDF) !important;
   background: var(--bg-primary, rgba(255, 255, 255, 0.60)) !important;
   backdrop-filter: blur(2px) !important;
