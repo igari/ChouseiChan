@@ -103,6 +103,14 @@ body {
   text-align: center;
 }
 
+#datepicker {
+  opacity: 0 !important;
+  position: absolute !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
 .candidate-date > li {
   display: flex;
   gap: 10px;
@@ -476,4 +484,10 @@ table td {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.base-time-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
