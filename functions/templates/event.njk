@@ -1,6 +1,7 @@
 {% extends "components/layout.njk" %}
 
-{% block title %}{{ event.name }} | イツスル | 日程調整ツール{% endblock %}
+{% set noindex = true %}
+{% set title = event.name ~ " | イツスル？ | 日程調整ツール" %}
 
 {% block main %}
   <div class="event-header">

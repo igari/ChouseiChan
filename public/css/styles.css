@@ -1,16 +1,15 @@
 :root {
-  --color-text-base: #54545e;
-  --color-border-base: #d6dcdf;
-  --color-bg-field: #fff;
   --color-primary: #4693cb;
-  --color-text: #333;
   --color-secondary: #455059;
-  --color-text-white: #fff;
-  --bg-table-header: #d6e7f3;
   --color-thirdly: #acd1ec;
-  --no-button-active: #838b8f;
-  --maybe-button-active: #ffcd6b;
-  --yes-button-active: #7cd085;
+  --color-border-base: #d6dcdf;
+  --color-fg-base: #333;
+  --color-fg-white: #fff;
+  --color-bg-field: #fff;
+  --color-bg-table-header: #d6e7f3;
+  --color-success: #7cd085;
+  --color-warning: #ffcd6b;
+  --color-no-attendance: #838b8f;
 }
 
 *,
@@ -72,7 +71,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.7;
   font-size: 16px;
-  color: var(--color-text);
+  color: var(--color-fg-base);
 }
 
 body {
@@ -82,6 +81,7 @@ body {
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
+  background-color: var(--color-primary); // To change background color of status bar of smartphone
 }
 
 .htmx-indicator {
@@ -125,7 +125,7 @@ body {
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  max-width: 420px;
+  max-width: 430px;
   min-width: 320px;
   margin-right: auto;
   margin-left: auto;
@@ -136,7 +136,14 @@ body {
 .wrapper > footer {
   flex: 0 0 auto;
 }
-@media (max-height: 1000px) and (max-width: 420px) {
+
+/* To hide background-color of body */
+html,
+body {
+  min-height: 100%;
+}
+
+@media (max-height: 1000px) and (max-width: 430px) {
   html,
   body,
   .wrapper {
@@ -216,17 +223,6 @@ footer {
   align-self: stretch;
 }
 
-.catch-copy {
-  color: var(--color-text-base);
-  font-feature-settings:
-    'clig' off,
-    'liga' off;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 510;
-  line-height: normal;
-}
-
 input[type='text'],
 input[type='time'] {
   display: flex;
@@ -249,7 +245,7 @@ input[type='text']:read-only {
   border-radius: 8px;
   border: 1px solid var(--color-border-base);
   background: var(--color-secondary);
-  color: var(--color-text-white);
+  color: var(--color-fg-white);
 }
 
 input[hidden] {
@@ -316,7 +312,7 @@ table {
 }
 
 table > thead {
-  background-color: var(--bg-table-header);
+  background-color: var(--color-bg-table-header);
 }
 
 table th {
@@ -339,7 +335,7 @@ table tr > th:first-of-type::before {
 }
 
 table > thead > tr > th:first-of-type {
-  background-color: var(--bg-table-header);
+  background-color: var(--color-bg-table-header);
 }
 table > tbody > tr > th:first-of-type {
   background-color: white;
@@ -352,11 +348,11 @@ table td {
 }
 
 .table-candidate-date-primary {
-  background-color: var(--yes-button-active);
+  background-color: var(--color-success);
   color: white;
 }
 .table-candidate-date-secondary {
-  background-color: var(--maybe-button-active);
+  background-color: var(--color-warning);
   color: white;
 }
 
@@ -420,21 +416,21 @@ table td {
   > input[type='radio'][value='YES']:checked
   + button {
   border-radius: 30px;
-  background: var(--yes-button-active);
+  background: var(--color-success);
 }
 .edit-candidate-dates__buttons
   > li
   > input[type='radio'][value='MAYBE']:checked
   + button {
   border-radius: 30px;
-  background: var(--maybe-button-active);
+  background: var(--color-warning);
 }
 .edit-candidate-dates__buttons
   > li
   > input[type='radio'][value='NO']:checked
   + button {
   border-radius: 30px;
-  background: var(--no-button-active);
+  background: var(--color-no-attendance);
 }
 
 .form-field {
@@ -454,7 +450,7 @@ table td {
 .copy-message {
   opacity: 0;
   font-weight: bold;
-  color: var(--yes-button-active);
+  color: var(--color-success);
   transition: opacity 200ms ease-in-out;
 }
 .copy-message-show {

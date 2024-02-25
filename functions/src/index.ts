@@ -97,15 +97,6 @@ export const fetchHome = onRequestWrapper(async (req, res): Promise<void> => {
         baseTime: event.baseTime,
       },
     })
-
-    console.warn({
-      id: eventId,
-      name: event.name,
-      candidateDates: event.candidateDates.join(', '),
-      candidateTimes: event.candidateTimes,
-      timeByDay: event.timeByDay,
-      baseTime: event.baseTime,
-    })
     res.send(responseText)
   } else {
     const responseText = nunjucks.render('index.njk')
