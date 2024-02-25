@@ -43,7 +43,12 @@
           </div>
 
         </div>
-        <div id="event-time"></div>
+        <div id="event-time">
+          <!-- Will replace to list element immediately with `template#event-time-template` parsed by form data -->
+          {% for date, time in event.candidateTimes %}
+            <input type="hidden" name="candidateTimes[{{ date }}]" value="{{ time }}"/>
+          {% endfor %}
+        </div>
       </div>
     </div>
     {% if event %}
@@ -53,20 +58,18 @@
 
   <template id="event-time-template">
     {% raw %}
-      <div>
-        <ul class="candidate-dates">
-          {% for c in candidateDates %}
-            <li class="flex-justify-between">
-              <time datetime="{{c.key}}">
-                {{ c.date }}
-              </time>
-              <div>
-                <input type="time" value="{{c.time}}" name="candidateTimes[{{c.key}}]" required/>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+      <ul class="candidate-dates">
+        {% for c in candidateDates %}
+          <li class="flex-justify-between">
+            <time datetime="{{c.key}}">
+              {{ c.date }}
+            </time>
+            <div>
+              <input type="time" value="{{c.time}}" name="candidateTimes[{{c.key}}]" required/>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
     {% endraw %}
   </template>
 

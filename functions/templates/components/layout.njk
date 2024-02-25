@@ -14,14 +14,27 @@
     </script>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <meta property="og:title" content="イツスル | 日程調整を簡単に">
-    <meta property="og:description" content="ログイン不要！ブラウザで完結するライトな日程調整ツールです">
-    <meta property="og:image" content="https://itsusuru.com/image/ogp.png">
-    <meta property="og:url" content="https://itsusuru.com">
+    <meta name="canonical" content="https://itsusuru.com">
+    <meta name="description" content="ログイン不要！ブラウザで完結するライトな日程調整ツールです">
+
+    <!-- Facebook Meta Tags -->
+    <meta property="og:url" content="{{ url | default('https://itsusuru.com') }}">
     <meta property="og:type" content="website">
-    <title>
-      {%- block title %}{% endblock -%}
-    </title>
+    <meta property="og:title" content="{{ title | default('イツスル？ | 日程調整を簡単に') }}">
+    <meta property="og:description" content="{{ description | default('ログイン不要！ブラウザで完結するライトな日程調整ツールです') }}">
+    <meta property="og:image" content="https://itsusuru.com/image/ogp.png">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="itsusuru.com">
+    <meta property="twitter:url" content="{{ url | default('https://itsusuru.com') }}">
+    <meta name="twitter:title" content="{{ title | default('イツスル？ | 日程調整を簡単に') }}">
+    <meta name="twitter:description" content="{{ description | default('ログイン不要！ブラウザで完結するライトな日程調整ツールです') }}">
+    <meta name="twitter:image" content="https://itsusuru.com/image/ogp.png">
+    {% if noindex | default(false) -%}
+      <meta name="robots" content="noindex, nofollow">
+    {%- endif %}
+    <title>{{ title | default('イツスル？ | 日程調整を簡単に') }}</title>
     <link rel="preconnect" href="https://rsms.me/">
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <link rel="stylesheet" href="/css/styles.css"/>
