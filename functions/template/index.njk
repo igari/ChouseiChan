@@ -1,0 +1,83 @@
+{% if event %}
+  {% set ACTION_PATH = "/updateEvent" %}
+{% else %}
+  {% set ACTION_PATH = "/createEvent" %}
+{% endif %}
+
+{% extends "components/layout.njk" %}
+
+{% block title -%}
+  {{ event.name if event else "イツスル | 日程調整ツール" }}
+{%- endblock %}
+
+{% block main %}
+  <form id="create-form" class="inherit-main" hx-post="{{API_BASE_PATH}}{{ ACTION_PATH }}"
+          hx-swap="outerHTML" hx-select=".wrapper" hx-target="closest .wrapper">
+    <div class="form-field">
+      <div>
+        <input type="text" id="event-name" name="name" 
+                {% if event %}value="{{ event.name }}"{% endif %}
+                placeholder="イベント名を入力してね" required="required"/>
+      </div>
+    </div>
+    <div class="form-field">
+      <label>候補日を選んでね</label>
+      <div class="section-flatpickr">
+        <input id="datepicker" name="candidateDates" required
+        {% if event %} value="{{ event.candidateDates }}"{% endif %}/>
+      </div>
+    </div>
+    <div class="form-field">
+      <div class="event-time-header">
+        <label>時間を選んでね</label>
+      </div>
+      <div class="event-time">
+        <div class="base-time-selector">
+          <div>
+            <input type="time" id="base-time" name="baseTime" value="{{ event.baseTime }}" 
+                {% if event.timeByDay %} disabled{% endif %} required/>
+          </div>
+          <div>
+            <input type="checkbox" name="timeByDay" id="time-by-day"{% if event.timeByDay %} checked{% endif %}/>
+            <label for="time-by-day">←を基準に日毎に設定</label>
+          </div>
+
+        </div>
+        <div id="event-time">
+          <!-- Will replace to list element immediately with `template#event-time-template` parsed by form data -->
+          {% for date, time in event.candidateTimes %}
+            <input type="hidden" name="candidateTimes[{{ date }}]" value="{{ time }}"/>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% if event %}
+      <input type="hidden" name="eventId" value="{{ event.id }}"/>
+    {% endif %}
+  </form>
+
+  <template id="event-time-template">
+    {% raw %}
+      <ul class="candidate-dates">
+        {% for c in candidateDates %}
+          <li class="flex-justify-between">
+            <time datetime="{{c.key}}">
+              {{ c.date }}
+            </time>
+            <div>
+              <input type="time" value="{{c.time}}" name="candidateTimes[{{c.key}}]" required/>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endraw %}
+  </template>
+
+{% endblock %}
+
+{% block footer %}
+  <button form="create-form" type="submit">
+    {%- if event -%}イベント更新{%- else -%}イベント作成{%- endif -%}
+    <img src="https://htmx.org/img/bars.svg" class="htmx-indicator" alt="loading..."/>
+  </button>
+{% endblock %}
