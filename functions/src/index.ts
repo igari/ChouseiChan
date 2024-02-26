@@ -31,8 +31,8 @@ const DOC_ORIGIN =
     : (process.env.DOC_ORIGIN as string)
 
 env.addGlobal('API_BASE_PATH', '/api')
-env.addGlobal('SITE_ORIGIN', DOC_ORIGIN)
-env.addGlobal('SITE_DOMAIN', DOC_ORIGIN.replace(/https?:\/\//, ''))
+env.addGlobal('SITE_ORIGIN', 'https://itsusuru.com')
+env.addGlobal('SITE_DOMAIN', 'itsusuru.com')
 env.addGlobal('SITE_NAME', 'イツスル？')
 
 const corsMiddleware = cors({
