@@ -1,9 +1,6 @@
-{% set siteName = "イツスル？" %}
 {% set siteTitle = "イツスル？ | 日程調整を簡単に" %}
 {% set siteDescription = "ログイン不要！ブラウザで完結するライトな日程調整ツールです" %}
-{% set siteDomain = "itsusuru.com" %}
-{% set siteOrigin = "https://" ~ siteDomain %}
-{% set ogpImage = dynamicOgpImageUrl | default(siteOrigin ~ '/image/ogp.png') %}
+{% set ogpImage = dynamicOgpImageUrl | default(SITE_ORIGIN ~ '/image/ogp.png') %}
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -24,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
     <!-- SEO -->
-    <meta name="canonical" content="{{ siteOrigin }}">
+    <meta name="canonical" content="{{ SITE_ORIGIN }}">
     <meta name="description" content="{{siteDescription}}">
 
     <!-- Robots -->
@@ -33,7 +30,7 @@
     {%- endif %}
 
     <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="{{ url | default(siteOrigin) }}">
+    <meta property="og:url" content="{{ url | default(SITE_ORIGIN) }}">
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ title | default(siteTitle) }}">
     <meta property="og:description" content="{{ description | default(siteDescription) }}">
@@ -43,8 +40,8 @@
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:domain" content="{{siteOrigin}}">
-    <meta property="twitter:url" content="{{ url | default(siteOrigin) }}">
+    <meta property="twitter:domain" content="{{SITE_DOMAIN}}">
+    <meta property="twitter:url" content="{{ url | default(SITE_ORIGIN) }}">
     <meta name="twitter:title" content="{{ title | default(siteTitle) }}">
     <meta name="twitter:description" content="{{ description | default(siteDescription) }}">
     <meta name="twitter:image" content="{{ ogpImage }}">
@@ -55,8 +52,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/image/favicon/favicon-16x16.png">
     <link rel="manifest" href="/image/favicon/site.webmanifest">
     <link rel="mask-icon" href="/image/favicon/safari-pinned-tab.svg" color="#4693cb">
-    <meta name="apple-mobile-web-app-title" content="{{siteName}}">
-    <meta name="application-name" content="{{siteName}}">
+    <meta name="apple-mobile-web-app-title" content="{{SITE_NAME}}">
+    <meta name="application-name" content="{{SITE_NAME}}">
     <meta name="msapplication-TileColor" content="#4693cb">
     <meta name="theme-color" content="#ffffff">
 
@@ -82,7 +79,7 @@
     <div class="wrapper">
       <header class="header">
         <h1 class="header__logo">
-          <a href="/" hx-boost="true">{{siteName}}</a>
+          <a href="/" hx-boost="true">{{SITE_NAME}}</a>
         </h1>
         <h2 class="header__tagline">日程調整を簡単に</h2>
       </header>
