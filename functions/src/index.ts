@@ -1,5 +1,6 @@
 // import { logger } from 'firebase-functions';//TODO loggerの使い方を調べる
 import path from 'node:path'
+import fs from 'node:fs'
 import { HttpsFunction, Request, onRequest } from 'firebase-functions/v2/https'
 import cors from 'cors'
 import express from 'express'
@@ -7,6 +8,7 @@ import { format } from 'date-fns'
 
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { initializeApp } from 'firebase-admin/app'
+import { createCanvas, registerFont, loadImage } from 'canvas'
 
 import nunjucks from 'nunjucks'
 import {
@@ -19,7 +21,7 @@ import {
   UpdateEventRequestParams,
 } from './type'
 
-const env = nunjucks.configure(path.join(__dirname, '../templates'), {
+const env = nunjucks.configure(path.join(__dirname, '../template'), {
   autoescape: true,
 })
 
@@ -446,3 +448,66 @@ export const responseEvent = onRequestWrapper(
     }
   }
 )
+
+export const ogpImage = onRequestWrapper(async (req, res) => {
+  const size = { width: 1200, height: 630 }
+  const title = req.query.title as string
+
+  if (!title) {
+    throw new Error('Title is not specified')
+  }
+
+  // font を登録
+  const font = path.join(__dirname, '../ogp/NotoSansJP-Bold.ttf')
+  registerFont(font, { family: 'NotoSansJP' })
+
+  // canvas を作成
+  const { width, height } = size
+  const canvas = createCanvas(width, height)
+  const ctx = canvas.getContext('2d')
+  const lineHeight = 1.5
+
+  // 元になる画像を読み込む
+  const src = path.join(__dirname, '../ogp/bg.png')
+  const image = await loadImage(fs.readFileSync(src))
+
+  // 元の画像を canvas にセットする
+  ctx.drawImage(image, 0, 0, width, height)
+
+  // タイトルを元の画像にセットする
+  const maxLengthByLine = 15
+  const titleLines =
+    title.match(new RegExp(`.{1,${maxLengthByLine}}`, 'g')) || []
+  const rowCount = titleLines.length
+  const padding = 100
+  const titleFontSize = 72
+  const datetimeFontSize = 42
+
+  if (rowCount === 0) {
+    throw new Error(`Invalid lines: ${rowCount}`)
+  }
+
+  const writeText = (
+    text: string,
+    y: number,
+    fontSize: number,
+    fontColor = '#3C3C41'
+  ) => {
+    ctx.font = `${fontSize}px NotoSansJP`
+    ctx.fillStyle = fontColor
+    ctx.fillText(text, padding, y, width - padding * 2)
+  }
+
+  // Write Title
+  titleLines.forEach((line, i) => {
+    const baseY = padding + 96
+    const actualLineHeight = titleFontSize * lineHeight
+    const y = baseY - i * actualLineHeight
+    writeText(line, y, titleFontSize)
+  })
+
+  writeText('クリックして予定を入力してね', height - padding, datetimeFontSize)
+
+  res.header('Content-Type', 'image/png')
+  res.send(canvas.toBuffer('image/png'))
+})

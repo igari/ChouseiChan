@@ -1,9 +1,10 @@
 :root {
-  --color-primary: #4693cb;
-  --color-secondary: #455059;
+  --color-primary: #4663CB;
+  --color-primary-gradient-end: #68a3e0;
+  --color-secondary: #464559;
   --color-thirdly: #acd1ec;
   --color-border-base: #d6dcdf;
-  --color-fg-base: #333;
+  --color-fg-base: #3C3C41;
   --color-fg-white: #fff;
   --color-bg-field: #fff;
   --color-bg-table-header: #d6e7f3;
@@ -178,7 +179,7 @@ body {
   display: block;
   width: 121px;
   height: 24px;
-  background: url('/image/logo.svg') left center no-repeat;
+  background: url('/image/logo_with_question_mark.svg') left center no-repeat;
   background-size: contain;
   text-indent: 100%;
   white-space: nowrap;
@@ -260,7 +261,6 @@ button {
   gap: 10px;
   align-self: stretch;
   border-radius: 8px;
-  background: var(--color-primary);
   border: 0;
   color: white;
   width: 100%;
@@ -268,11 +268,11 @@ button {
   border-radius: 50px;
 
   /* TODO: add mixin or var */
-  background: linear-gradient(
+  background: var(--color-primary) linear-gradient(
     273deg,
-    #68a3e0 4.95%,
+    var(--color-primary-gradient-end) 4.95%,
     var(--color-primary) 93.62%
-  );
+  ) no-repeat;
   box-shadow: 0px 4px 20px 0px rgb(104 151 224 / 50%);
 }
 

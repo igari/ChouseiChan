@@ -1,0 +1,110 @@
+{% extends "components/layout.njk" %}
+
+{% set noindex = true %}
+{% set title = event.name ~ " | イツスル？ | 日程調整ツール" %}
+{% set description = "予定を入力してね" %}
+{% set url = "https://istusuru.com/event?eventId=" ~ event.id %}
+{% set dynamicOgpImageUrl = "https://istusuru.com/api/ogpImage?" ~ "title=" ~ event.name %}
+
+{% block head %}
+  <link rel="stylesheet" href="/styles/event.css">
+{% endblock %}
+
+{% block header %}
+  <header>
+    <h1>
+      <a href="/">イツスル？</a>
+    </h1>
+  </header>
+{% endblock %}
+
+{% block main %}
+  <div class="event-header">
+    <h2>{{ event.name }}</h2>
+    <nav>
+      <ul>
+        <li>
+          <a href="/?eventId={{ event.id }}">編集</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="form-field">
+    <div class="form-field-header">
+      <label>タップしてURLを共有してね</label>
+      <div id="copyMessage" class="copy-message">コピーしました</div>
+    </div>
+    <input type="text" readonly
+      _="on load put location.href into me.value
+        on click call navigator.clipboard.writeText(me.value) then add .copy-message-show to #copyMessage
+        wait 3s then remove .copy-message-show from #copyMessage"/>
+  </div>
+  <div class="table-container">
+    <table>
+      <colgroup>
+        <col/>
+        {% for c in event.candidateDates %}
+          {% if c.status === 'primary' %}
+            <col class="table-candidate-date-primary"/>
+          {% elif c.status === 'secondary' %}
+            <col class="table-candidate-date-secondary"/>
+          {% else %}
+            <col/>
+          {% endif %}
+        {% endfor %}
+      </colgroup>
+      <thead>
+        <tr>
+          <th>なまえ</th>
+          {% for c in event.candidateDates %}
+            <th>{{ c.date }}<br/>{{ c.time }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% if participants.length > 0 %}
+          {% for p in participants %}
+            <tr>
+              <th>
+                <a href="/edit?eventId={{event.id}}&participantId={{ p.id }}">
+                  {{ p.name }}
+                </a>
+              </th>
+
+              {% for c in event.candidateDates %}
+                <td align="center">
+                  {% if p.responses[c.key] === 'YES' -%}
+                  ◯
+                {%- elseif p.responses[c.key] === 'MAYBE' -%}
+                  △
+                {%- elseif p.responses[c.key] === 'NO' -%}
+                  ✕
+                {%- endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td>-</td>
+            <td colspan="{{ event.candidateDates.length }}">
+                予定を入力すると参加可否が表示されるよ
+              </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <button
+      hx-get="/edit?eventId={{event.id}}"
+      hx-push-url="true"
+      hx-swap="outerHTML"
+      hx-select=".wrapper"
+      hx-target="closest .wrapper"
+    >
+    予定を入力
+  </button>
+{% endblock %}
