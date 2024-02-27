@@ -1,23 +1,25 @@
 :root {
-  --color-primary: #4663CB;
+  --color-primary: #4663cb;
   --color-primary-gradient-end: #68a3e0;
   --color-secondary: #464559;
   --color-thirdly: rgb(255 255 255 / 3%);
   --color-border-base: #d6dcdf;
-  --color-fg-base: #3C3C41;
+  --color-fg-base: #3c3c41;
   --color-fg-white: #fff;
   --color-bg-field: rgb(255 255 255 / 50%);
-  --color-bg-table-header: #6882d6;
+  --color-bg-table-header: #c8d2f0;
   --color-bg-table-body-th: #f8f8ff;
   --color-bg-table: rgb(255 255 255 / 50%);
   --color-success: #7cd085;
   --color-warning: #ffcd6b;
   --color-no-attendance: #838b8f;
-  --button-primary: var(--color-primary) linear-gradient(
-    273deg,
-    var(--color-primary-gradient-end),
-    var(--color-primary)
-  ) no-repeat;
+  --button-primary: var(--color-primary)
+    linear-gradient(
+      273deg,
+      var(--color-primary-gradient-end),
+      var(--color-primary)
+    )
+    no-repeat;
 }
 
 *,
@@ -46,7 +48,7 @@ html {
 }
 
 [data-loading] {
-  display: none;
+  display: none !important;
 }
 
 input,
@@ -93,7 +95,9 @@ body {
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
-  background-color: var(--color-primary); // To change background color of status bar of smartphone
+  background-color: var(
+    --color-primary
+  ); /* To change background color of status bar of smartphone */
 }
 
 .htmx-indicator {
@@ -335,7 +339,6 @@ table > thead {
 
 table th {
   font-weight: normal;
-  color: white;
 }
 table tr > th:first-of-type {
   position: sticky;
@@ -436,7 +439,6 @@ table td {
   border-radius: 30px;
   background: var(--color-thirdly);
   box-shadow: 0px 0px 6px 0px rgba(18, 20, 21, 0.25);
-
 }
 .edit-candidate-dates__buttons > li > button > svg {
   fill: var(--color-primary);
@@ -447,7 +449,11 @@ table td {
   box-shadow: inset 0px 0px 6px 0px rgba(18, 20, 21, 0.25);
   background: var(--button-primary);
 }
-.edit-candidate-dates__buttons > li > input[type='radio']:checked + button > svg {
+.edit-candidate-dates__buttons
+  > li
+  > input[type='radio']:checked
+  + button
+  > svg {
   fill: white;
 }
 
@@ -511,4 +517,51 @@ table td {
   height: 16px;
   fill: var(--color-fg-base);
   vertical-align: middle;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+}
+.loading-overlay img {
+  width: 50%;
+  height: auto;
+  animation: fade 6s infinite alternate;
+  filter: hue-rotate(25deg);
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+    filter: hue-rotate(5deg);
+  }
+  20% {
+    opacity: 1;
+    filter: hue-rotate(25deg);
+  }
+  40% {
+    opacity: 0;
+    filter: hue-rotate(45deg);
+  }
+  60% {
+    opacity: 1;
+    filter: hue-rotate(65deg);
+  }
+  80% {
+    opacity: 0;
+    filter: hue-rotate(85deg);
+  }
+  100% {
+    opacity: 1;
+    filter: hue-rotate(105deg);
+  }
 }
