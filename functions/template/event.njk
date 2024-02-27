@@ -57,7 +57,7 @@
         <tr>
           <th>なまえ</th>
           {% for c in event.candidateDates %}
-            <th>{{ c.date }}<br/>{{ c.time }}</th>
+            <th>{{ c.date }}&nbsp;{{ c.dayOfWeek }}<br>{{ c.time }}</th>
           {% endfor %}
         </tr>
       </thead>

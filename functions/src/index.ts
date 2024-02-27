@@ -5,6 +5,7 @@ import { HttpsFunction, Request, onRequest } from 'firebase-functions/v2/https'
 import cors from 'cors'
 import express from 'express'
 import { format } from 'date-fns'
+import { ja } from 'date-fns/locale'
 
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { initializeApp } from 'firebase-admin/app'
@@ -304,11 +305,13 @@ export const fetchEvent = onRequestWrapper(async (req, res): Promise<void> => {
         })()
 
         const time = event.candidateTimes[date] || event.baseTime
+        const dateInstance = new Date(`${date}T${time}`)
 
         return {
           key: `${date}T${time}`,
-          date: format(new Date(`${date}T${time}`), 'M/d'),
-          time: format(new Date(`${date}T${time}`), 'H:mm'),
+          date: format(dateInstance, 'M/d'),
+          time: format(dateInstance, 'H:mm'),
+          dayOfWeek: format(dateInstance, 'E', { locale: ja }),
           status,
         }
       }),
@@ -385,10 +388,12 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
         name: event.name,
         candidateDates: event.candidateDates.map((date) => {
           const time = event.candidateTimes[date] || event.baseTime
+          const dateInstance = new Date(`${date}T${time}`)
           return {
             key: `${date}T${time}`,
-            date: format(new Date(`${date}T${time}`), 'M/d'),
-            time: format(new Date(`${date}T${time}`), 'H:mm'),
+            date: format(dateInstance, 'M/d'),
+            time: format(dateInstance, 'H:mm'),
+            dayOfWeek: format(dateInstance, 'E', { locale: ja }),
           }
         }),
         timeByDay: event.timeByDay,
@@ -406,10 +411,12 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
         name: event.name,
         candidateDates: event.candidateDates.map((date) => {
           const time = event.candidateTimes[date] || event.baseTime
+          const dateInstance = new Date(`${date}T${time}`)
           return {
             key: `${date}T${time}`,
-            date: format(new Date(`${date}T${time}`), 'M/d'),
-            time: format(new Date(`${date}T${time}`), 'H:mm'),
+            date: format(dateInstance, 'M/d'),
+            time: format(dateInstance, 'H:mm'),
+            dayOfWeek: format(dateInstance, 'E', { locale: ja }),
           }
         }),
         timeByDay: event.timeByDay,
