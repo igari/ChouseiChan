@@ -38,6 +38,10 @@ html {
   }
 }
 
+[data-loading] {
+  display: none;
+}
+
 input,
 select,
 textarea,
@@ -98,10 +102,6 @@ body {
 
 .htmx-request.htmx-indicator {
   opacity: 1;
-}
-
-.htmx-request button[type='submit'] {
-  pointer-events: none;
 }
 
 .section-flatpickr {
