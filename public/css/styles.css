@@ -47,10 +47,6 @@ html {
   }
 }
 
-[data-loading] {
-  display: none !important;
-}
-
 input,
 select,
 textarea,
@@ -98,21 +94,6 @@ body {
   background-color: var(
     --color-primary
   ); /* To change background color of status bar of smartphone */
-}
-
-.htmx-indicator {
-  display: none;
-  opacity: 0;
-  transition: opacity 500ms ease-in;
-}
-
-.htmx-request .htmx-indicator {
-  display: inline;
-  opacity: 1;
-}
-
-.htmx-request.htmx-indicator {
-  opacity: 1;
 }
 
 .section-flatpickr {
@@ -536,7 +517,7 @@ table td {
 .loading-overlay img {
   width: 210.5px;
   height: 250px;
-  animation: fade 6s infinite alternate;
+  animation: fade 1.2s infinite alternate;
   filter: hue-rotate(25deg);
   will-change: filter, opacity;
 }
@@ -544,26 +525,14 @@ table td {
 @keyframes fade {
   0% {
     opacity: 0;
-    filter: hue-rotate(5deg);
-  }
-  20% {
-    opacity: 1;
-    filter: hue-rotate(25deg);
-  }
-  40% {
-    opacity: 0;
-    filter: hue-rotate(45deg);
-  }
-  60% {
-    opacity: 1;
-    filter: hue-rotate(65deg);
-  }
-  80% {
-    opacity: 0;
-    filter: hue-rotate(85deg);
+    filter: hue-rotate(0deg);
   }
   100% {
     opacity: 1;
-    filter: hue-rotate(105deg);
+    filter: hue-rotate(25deg);
   }
+}
+
+[data-loading] {
+  display: none;
 }

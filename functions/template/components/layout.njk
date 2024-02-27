@@ -76,8 +76,8 @@
     <script type="module" src="index.js" defer="defer"></script>
 
   </head>
-  <body>
-    <div class="wrapper" hx-ext="loading-states">
+  <body hx-ext="loading-states">
+    <div class="wrapper">
       <header class="header">
         <h1 class="header__logo">
           <a href="/" hx-boost="true">{{SITE_NAME}}</a>
@@ -95,7 +95,7 @@
         {% endblock %}
       </footer>
     </div>
-    <figure class="loading-overlay" data-loading>
+    <figure class="loading-overlay" data-loading="flex">
       <img src="/image/soul.gif" alt="loading..."/>
       <figcaption>ちょっとまっててね</figcaption>
     </figure>
