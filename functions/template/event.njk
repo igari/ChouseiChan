@@ -74,16 +74,16 @@
               {% for c in event.candidateDates %}
                 <td align="center">
                   {% if p.responses[c.key] === 'YES' -%}
-                    <svg class="icon-response">
-                      <use xlink:href="/image/icon/response.svg#yes"></use>
+                    <svg class="icon-response" width="16" height="16">
+                      <use href="/image/icon/yes.svg#id"></use>
                     </svg>
                   {%- elseif p.responses[c.key] === 'MAYBE' -%}
-                    <svg class="icon-response">
-                      <use xlink:href="/image/icon/response.svg#maybe"></use>
+                    <svg class="icon-response" width="16" height="14">
+                      <use href="/image/icon/maybe.svg#id"></use>
                     </svg>
                   {%- elseif p.responses[c.key] === 'NO' -%}
-                    <svg class="icon-response">
-                      <use xlink:href="/image/icon/response.svg#no"></use>
+                    <svg class="icon-response" width="14" height="14">
+                      <use href="/image/icon/no.svg#id"></use>
                     </svg>
                   {%- endif %}
                 </td>

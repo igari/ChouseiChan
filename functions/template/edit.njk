@@ -50,7 +50,7 @@
                   {%- if participant and participant.responses[c.key] ==='YES' %} checked{% endif %}/>
                 <button class="button-icon">
                   <svg class="icon-response" width="16" height="16">
-                    <use xlink:href="/image/icon/response.svg#yes"></use>
+                    <use href="/image/icon/yes.svg#id"></use>
                   </svg>
                 </button>
               </li>
@@ -59,7 +59,7 @@
                   {%- if participant and participant.responses[c.key] === 'MAYBE' %} checked{%endif %}/>
                 <button class="button-icon">
                   <svg class="icon-response" width="16" height="14">
-                    <use xlink:href="/image/icon/response.svg#maybe"></use>
+                    <use href="/image/icon/maybe.svg#id"></use>
                   </svg>
                 </button>
               </li>
@@ -72,7 +72,7 @@
                 {% endif %}
                 <button class="button-icon">
                   <svg class="icon-response" width="14" height="14">
-                    <use xlink:href="/image/icon/response.svg#no"></use>
+                    <use href="/image/icon/no.svg#id"></use>
                   </svg>
                 </button>
               </li>
