@@ -531,12 +531,14 @@ table td {
   align-items: center;
   flex-direction: column;
   color: white;
+  margin: 0;
 }
 .loading-overlay img {
-  width: 50%;
-  height: auto;
+  width: 210.5px;
+  height: 250px;
   animation: fade 6s infinite alternate;
   filter: hue-rotate(25deg);
+  will-change: filter, opacity;
 }
 
 @keyframes fade {
