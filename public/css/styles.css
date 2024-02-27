@@ -286,13 +286,24 @@ button.button-icon {
   align-items: center;
 }
 
-.event-header a {
+.event-header h2 a {
+  display: inline-block;
+  vertical-align: middle;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  background: url('/image/icon/back.svg') center center no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: 16px 11.49px;
+}
+.event-header nav a {
   display: flex;
   align-items: center;
   gap: 8px;
   white-space: nowrap;
 }
-.event-header a::before {
+.event-header nav a::before {
   content: '';
   background: url('/image/icon/edit.svg') left center no-repeat;
   width: 16px;

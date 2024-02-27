@@ -4,8 +4,11 @@
 {% set title = event.name ~ " | イツスル？ | 日程調整ツール" %}
 
 {% block main %}
-  <div class="event-header ">
-    <h2>{{ event.name }}</h2>
+  <div class="event-header">
+    <h2>
+      <a href="/event?eventId={{ event.id }}" hx-boost="true">戻る</a>
+      {{ event.name }}
+    </h2>
     <nav>
       <ul>
         <li>
