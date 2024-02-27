@@ -21,7 +21,7 @@
       hx-select=".wrapper"
       hx-target="closest .wrapper"
       class="inherit-main"
-    >
+  >
     <div>
       <input type="text"
           name="name"
@@ -96,5 +96,8 @@
 {% endblock %}
 
 {% block footer %}
-  <button form="edit-form" type="submit">送信</button>
+  <button form="edit-form" type="submit">
+    送信
+    <img src="https://htmx.org/img/bars.svg" class="htmx-indicator" alt="loading..."/>
+  </button>
 {% endblock %}
