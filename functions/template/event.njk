@@ -66,7 +66,7 @@
           {% for p in participants %}
             <tr>
               <th>
-                <a href="/edit?eventId={{event.id}}&participantId={{ p.id }}">
+                <a href="/edit?eventId={{event.id}}&participantId={{ p.id }}" hx-boost="true">
                   {{ p.name }}
                 </a>
               </th>

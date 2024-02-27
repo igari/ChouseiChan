@@ -68,6 +68,7 @@
 
     <!-- JavaScript -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/loading-states.js"></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
@@ -76,7 +77,7 @@
 
   </head>
   <body>
-    <div class="wrapper">
+    <div class="wrapper" hx-ext="loading-states">
       <header class="header">
         <h1 class="header__logo">
           <a href="/" hx-boost="true">{{SITE_NAME}}</a>
