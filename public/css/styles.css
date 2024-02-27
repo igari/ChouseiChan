@@ -55,6 +55,11 @@ button {
   line-height: inherit;
 }
 
+img,
+svg {
+  vertical-align: middle;
+}
+
 a:link,
 a:visited,
 a:hover,
@@ -278,6 +283,15 @@ button.button-icon {
   height: 36px;
 }
 
+button.button-icon > svg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+
 .event-header {
   display: flex;
   justify-content: space-between;
@@ -424,6 +438,7 @@ table td {
   width: 100%;
   height: 100%;
   margin: 0;
+  z-index: 1;
 }
 .edit-candidate-dates__buttons > li > button {
   border-radius: 30px;
@@ -503,14 +518,7 @@ table td {
 }
 
 .icon-response {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: auto;
   fill: var(--color-fg-base);
-  vertical-align: middle;
 }
 
 .loading-overlay {
