@@ -272,10 +272,8 @@ button:not(.button-icon) {
 }
 
 button.button-icon {
-  display: flex;
+  position: relative;
   border-radius: 9999px;
-  align-items: center;
-  justify-content: center;
   width: 36px;
   height: 36px;
 }
@@ -505,8 +503,12 @@ table td {
 }
 
 .icon-response {
-  width: 16px;
-  height: 16px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
   fill: var(--color-fg-base);
   vertical-align: middle;
 }
