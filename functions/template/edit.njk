@@ -26,7 +26,7 @@
       <input type="text"
           name="name"
           placeholder="名前を入力してね"
-          {% if participant %}value="{{ participant.name }}"{% endif %}
+          {%- if participant %}value="{{ participant.name }}"{% endif %}
           required/>
     </div>
     <div class="form-field">
@@ -34,58 +34,48 @@
         選んで送信してね
       </div>
       <ul class="candidate-dates">
-        {% if participant %}
-          {% for c in event.candidateDates %}
-            <li>
-              <time datetime="{{c.key }}">
-                {{ c.date }}
-                {{ c.dayOfWeek }}
-                {{ c.time }}
-              </time>
-              <ul class="edit-candidate-dates__buttons">
-                <li>
-                  <input type="radio" name="responses[{{c.key}}]" value="YES" 
-                    {% if participant.responses[c.key] ==='YES' %}checked{% endif %}/>
-                  <button>◯</button>
-                </li>
-                <li>
-                  <input type="radio" name="responses[{{c.key}}]" value="MAYBE" 
-                    {% if participant.responses[c.key] === 'MAYBE' %}checked{%endif %}/>
-                  <button>△</button>
-                </li>
-                <li>
+        {% for c in event.candidateDates %}
+          <li>
+            <time datetime="{{c.key }}">
+              {{ c.date }}
+              {{ c.dayOfWeek }}
+              {{ c.time }}
+            </time>
+            <ul class="edit-candidate-dates__buttons">
+              <li>
+                <input type="radio" name="responses[{{c.key}}]" value="YES" 
+                  {%- if participant and participant.responses[c.key] ==='YES' %} checked{% endif %}/>
+                <button class="button-icon">
+                  <svg class="icon-response">
+                    <use xlink:href="/image/icon/response.svg#yes"></use>
+                  </svg>
+                </button>
+              </li>
+              <li>
+                <input type="radio" name="responses[{{c.key}}]" value="MAYBE" 
+                  {%- if participant and participant.responses[c.key] === 'MAYBE' %} checked{%endif %}/>
+                <button class="button-icon">
+                  <svg class="icon-response">
+                    <use xlink:href="/image/icon/response.svg#maybe"></use>
+                  </svg>
+                </button>
+              </li>
+              <li>
+                {% if participant %}
                   <input type="radio" name="responses[{{c.key}}]" value="NO"
-                    {% if participant.responses[c.key] === 'NO' %}checked{%endif %}/>
-                  <button>✕</button>
-                </li>
-              </ul>
-            </li>
-          {% endfor %}
-        {% else %}
-          {% for c in event.candidateDates %}
-            <li>
-              <time datetime="{{c.key }}">
-                {{ c.date }}
-                {{ c.dayOfWeek }}
-                {{ c.time }}
-              </time>
-              <ul class="edit-candidate-dates__buttons">
-                <li>
-                  <input type="radio" name="responses[{{c.key}}]" value="YES"/>
-                  <button>◯</button>
-                </li>
-                <li>
-                  <input type="radio" name="responses[{{c.key}}]" value="MAYBE"/>
-                  <button>△</button>
-                </li>
-                <li>
+                    {%- if participant.responses[c.key] === 'NO' %} checked{%endif %}/>
+                {% else %}
                   <input type="radio" name="responses[{{c.key}}]" value="NO" checked/>
-                  <button>✕</button>
-                </li>
-              </ul>
-            </li>
-          {% endfor %}
-        {% endif %}
+                {% endif %}
+                <button class="button-icon">
+                  <svg class="icon-response">
+                    <use xlink:href="/image/icon/response.svg#no"></use>
+                  </svg>
+                </button>
+              </li>
+            </ul>
+          </li>
+        {% endfor %}
       </ul>
     </div>
     <input type="hidden" name="eventId" value="{{ event.id }}"/>

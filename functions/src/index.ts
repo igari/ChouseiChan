@@ -391,8 +391,8 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
           const dateInstance = new Date(`${date}T${time}`)
           return {
             key: `${date}T${time}`,
-            date: format(dateInstance, 'M/d'),
-            time: format(dateInstance, 'H:mm'),
+            date: format(dateInstance, 'MM/dd'),
+            time: format(dateInstance, 'HH:mm'),
             dayOfWeek: format(dateInstance, 'E', { locale: ja }),
           }
         }),
@@ -414,8 +414,8 @@ export const fetchEdit = onRequestWrapper(async (req, res): Promise<void> => {
           const dateInstance = new Date(`${date}T${time}`)
           return {
             key: `${date}T${time}`,
-            date: format(dateInstance, 'M/d'),
-            time: format(dateInstance, 'H:mm'),
+            date: format(dateInstance, 'MM/dd'),
+            time: format(dateInstance, 'HH:mm'),
             dayOfWeek: format(dateInstance, 'E', { locale: ja }),
           }
         }),
