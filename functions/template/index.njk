@@ -84,6 +84,6 @@
 {% block footer %}
   <button form="create-form" type="submit" data-loading-disable>
     {%- if event -%}イベント更新{%- else -%}イベント作成{%- endif -%}
-    <img src="/image/icon/bars.svg" class="htmx-indicator" alt="loading..."/>
+    <img src="/image/icon/bars.svg" alt="loading..." data-loading="inline"/>
   </button>
 {% endblock %}
