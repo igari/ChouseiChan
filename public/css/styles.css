@@ -2,15 +2,22 @@
   --color-primary: #4663CB;
   --color-primary-gradient-end: #68a3e0;
   --color-secondary: #464559;
-  --color-thirdly: #acd1ec;
+  --color-thirdly: rgb(255 255 255 / 3%);
   --color-border-base: #d6dcdf;
   --color-fg-base: #3C3C41;
   --color-fg-white: #fff;
-  --color-bg-field: #fff;
-  --color-bg-table-header: #d6e7f3;
+  --color-bg-field: rgb(255 255 255 / 50%);
+  --color-bg-table-header: #6882d6;
+  --color-bg-table-body-th: #f8f8ff;
+  --color-bg-table: rgb(255 255 255 / 50%);
   --color-success: #7cd085;
   --color-warning: #ffcd6b;
   --color-no-attendance: #838b8f;
+  --button-primary: var(--color-primary) linear-gradient(
+    273deg,
+    var(--color-primary-gradient-end),
+    var(--color-primary)
+  ) no-repeat;
 }
 
 *,
@@ -258,6 +265,11 @@ input[hidden] {
 }
 
 button {
+  border: 0;
+  cursor: pointer;
+}
+
+button:not(.button-icon) {
   display: flex;
   padding: 16px;
   justify-content: center;
@@ -265,19 +277,22 @@ button {
   gap: 10px;
   align-self: stretch;
   border-radius: 8px;
-  border: 0;
   color: white;
   width: 100%;
-
   border-radius: 50px;
 
   /* TODO: add mixin or var */
-  background: var(--color-primary) linear-gradient(
-    273deg,
-    var(--color-primary-gradient-end) 4.95%,
-    var(--color-primary) 93.62%
-  ) no-repeat;
+  background: var(--button-primary);
   box-shadow: 0px 4px 20px 0px rgb(104 151 224 / 50%);
+}
+
+button.button-icon {
+  display: flex;
+  border-radius: 9999px;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
 }
 
 .event-header {
@@ -310,8 +325,7 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
   border: 1px solid var(--color-border-base);
-  background-color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(2px);
+  background-color: var(--color-bg-table);
   line-height: 1.5;
 }
 
@@ -321,6 +335,7 @@ table > thead {
 
 table th {
   font-weight: normal;
+  color: white;
 }
 table tr > th:first-of-type {
   position: sticky;
@@ -328,27 +343,40 @@ table tr > th:first-of-type {
   white-space: nowrap;
   border-left: 1px solid var(--color-border-base);
 }
-table tr > th:first-of-type::before {
+
+table tr > th:first-of-type::before,
+table tr > th:first-of-type::after {
   content: '';
   position: absolute;
   top: 0;
-  left: -1px;
   width: 1px;
   height: 100%;
-  background-color: var(--color-border-base);
+}
+table tr > th:first-of-type::before {
+  left: -1px;
+}
+table tr > th:first-of-type::after {
+  right: -1px;
 }
 
 table > thead > tr > th:first-of-type {
   background-color: var(--color-bg-table-header);
+  text-align: left;
 }
 table > tbody > tr > th:first-of-type {
-  background-color: white;
+  background-color: var(--color-bg-table-body-th);
 }
 table th,
 table td {
   padding: 8px;
   border: 1px solid var(--color-border-base);
+}
+table > tbody > tr > th {
   text-align: left;
+}
+table td {
+  text-align: center;
+  vertical-align: middle;
 }
 
 .table-candidate-date-primary {
@@ -373,8 +401,8 @@ table td {
   justify-content: space-between;
   align-items: center;
   border-radius: 8px;
-  background: var(--bg-primary, rgba(255, 255, 255, 0.6));
-  box-shadow: 0px 0px 6px 0px rgba(18, 20, 21, 0.07);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0px 0px 6px 0px rgba(18, 20, 21, 0.1);
   backdrop-filter: blur(2px);
 }
 
@@ -402,39 +430,25 @@ table td {
   left: 0;
   width: 100%;
   height: 100%;
+  margin: 0;
 }
 .edit-candidate-dates__buttons > li > button {
   border-radius: 30px;
   background: var(--color-thirdly);
+  box-shadow: 0px 0px 6px 0px rgba(18, 20, 21, 0.25);
 
-  /* button shadow */
-  box-shadow: 0px 0px 6px 0px #c5d5de;
+}
+.edit-candidate-dates__buttons > li > button > svg {
+  fill: var(--color-primary);
 }
 
 .edit-candidate-dates__buttons > li > input[type='radio']:checked + button {
   /* button active shadow */
-  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.25) inset;
+  box-shadow: inset 0px 0px 6px 0px rgba(18, 20, 21, 0.25);
+  background: var(--button-primary);
 }
-.edit-candidate-dates__buttons
-  > li
-  > input[type='radio'][value='YES']:checked
-  + button {
-  border-radius: 30px;
-  background: var(--color-success);
-}
-.edit-candidate-dates__buttons
-  > li
-  > input[type='radio'][value='MAYBE']:checked
-  + button {
-  border-radius: 30px;
-  background: var(--color-warning);
-}
-.edit-candidate-dates__buttons
-  > li
-  > input[type='radio'][value='NO']:checked
-  + button {
-  border-radius: 30px;
-  background: var(--color-no-attendance);
+.edit-candidate-dates__buttons > li > input[type='radio']:checked + button > svg {
+  fill: white;
 }
 
 .form-field {
@@ -490,4 +504,11 @@ table td {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.icon-response {
+  width: 16px;
+  height: 16px;
+  fill: var(--color-fg-base);
+  vertical-align: middle;
 }

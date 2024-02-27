@@ -74,12 +74,18 @@
               {% for c in event.candidateDates %}
                 <td align="center">
                   {% if p.responses[c.key] === 'YES' -%}
-                  ◯
-                {%- elseif p.responses[c.key] === 'MAYBE' -%}
-                  △
-                {%- elseif p.responses[c.key] === 'NO' -%}
-                  ✕
-                {%- endif %}
+                    <svg class="icon-response">
+                      <use xlink:href="/image/icon/response.svg#yes"></use>
+                    </svg>
+                  {%- elseif p.responses[c.key] === 'MAYBE' -%}
+                    <svg class="icon-response">
+                      <use xlink:href="/image/icon/response.svg#maybe"></use>
+                    </svg>
+                  {%- elseif p.responses[c.key] === 'NO' -%}
+                    <svg class="icon-response">
+                      <use xlink:href="/image/icon/response.svg#no"></use>
+                    </svg>
+                  {%- endif %}
                 </td>
               {% endfor %}
             </tr>
