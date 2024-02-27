@@ -49,7 +49,7 @@
                 <input type="radio" name="responses[{{c.key}}]" value="YES" 
                   {%- if participant and participant.responses[c.key] ==='YES' %} checked{% endif %}/>
                 <button class="button-icon">
-                  <svg class="icon-response">
+                  <svg class="icon-response" width="16" height="16">
                     <use xlink:href="/image/icon/response.svg#yes"></use>
                   </svg>
                 </button>
@@ -58,7 +58,7 @@
                 <input type="radio" name="responses[{{c.key}}]" value="MAYBE" 
                   {%- if participant and participant.responses[c.key] === 'MAYBE' %} checked{%endif %}/>
                 <button class="button-icon">
-                  <svg class="icon-response">
+                  <svg class="icon-response" width="16" height="14">
                     <use xlink:href="/image/icon/response.svg#maybe"></use>
                   </svg>
                 </button>
@@ -71,7 +71,7 @@
                   <input type="radio" name="responses[{{c.key}}]" value="NO" checked/>
                 {% endif %}
                 <button class="button-icon">
-                  <svg class="icon-response">
+                  <svg class="icon-response" width="14" height="14">
                     <use xlink:href="/image/icon/response.svg#no"></use>
                   </svg>
                 </button>
