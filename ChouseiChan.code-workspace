@@ -14,6 +14,13 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit",
     },
-    "cSpell.words": ["autoescape", "Noto", "predeploy", "tekamaru", "TXLH"],
+    "cSpell.words": [
+      "autoescape",
+      "Noto",
+      "predeploy",
+      "repsy",
+      "tekamaru",
+      "TXLH",
+    ],
   },
 }
