@@ -511,12 +511,9 @@ export const ogpImage = onRequestWrapper(async (req, res) => {
     writeText(line, y, titleFontSize)
   })
 
+  // Write Caption
   writeText('クリックして予定を入力してね', height - padding, datetimeFontSize)
 
   res.header('Content-Type', 'image/png')
   res.send(canvas.toBuffer('image/png'))
-})
-
-export const helloHttp = onRequestWrapper(() => {
-  throw new Error('oh, hello there!')
 })
