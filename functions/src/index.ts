@@ -1,11 +1,13 @@
 // import { logger } from 'firebase-functions';//TODO loggerの使い方を調べる
 import path from 'node:path'
 import fs from 'node:fs'
-import { HttpsFunction, Request, onRequest } from 'firebase-functions/v2/https'
-import cors from 'cors'
-import express from 'express'
+import * as Sentry from '@sentry/serverless'
+import { HttpsFunction, onRequest } from 'firebase-functions/v2/https'
+import { Request, Response } from 'express'
+
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import { ProfilingIntegration } from '@sentry/profiling-node'
 
 import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { initializeApp } from 'firebase-admin/app'
@@ -26,19 +28,10 @@ const env = nunjucks.configure(path.join(__dirname, '../template'), {
   autoescape: true,
 })
 
-const DOC_ORIGIN =
-  process.env.FUNCTIONS_EMULATOR === 'true'
-    ? (process.env.DOC_ORIGIN_FOR_EMULATOR as string)
-    : (process.env.DOC_ORIGIN as string)
-
 env.addGlobal('API_BASE_PATH', '/api')
 env.addGlobal('SITE_ORIGIN', 'https://itsusuru.com')
 env.addGlobal('SITE_DOMAIN', 'itsusuru.com')
 env.addGlobal('SITE_NAME', 'イツスル？')
-
-const corsMiddleware = cors({
-  origin: [DOC_ORIGIN],
-})
 
 // specify the region for your functions
 const region =
@@ -59,17 +52,19 @@ const app = initializeApp({
 
 const db = getFirestore(app)
 
+Sentry.GCPFunction.init({
+  dsn: process.env.SENTRY_DSN,
+  integrations: [new ProfilingIntegration()],
+  // Performance Monitoring
+  tracesSampleRate: 1.0, //  Capture 100% of the transactions
+  // Set sampling rate for profiling - this is relative to tracesSampleRate
+  profilesSampleRate: 1.0,
+})
+
 const onRequestWrapper = (
-  handler: (
-    request: Request,
-    response: express.Response
-  ) => void | Promise<void>
+  handler: (request: Request, response: Response) => void | Promise<void>
 ): HttpsFunction => {
-  return onRequest({ region }, async (req, res): Promise<void> => {
-    corsMiddleware(req, res, async () => {
-      handler(req, res)
-    })
-  })
+  return onRequest({ region }, Sentry.GCPFunction.wrapHttpFunction(handler))
 }
 
 export const fetchHome = onRequestWrapper(async (req, res): Promise<void> => {
