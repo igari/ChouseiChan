@@ -1,4 +1,5 @@
-import * as dateFns from 'https://cdn.jsdelivr.net/npm/date-fns/+esm'
+import { format } from 'https://cdn.jsdelivr.net/npm/date-fns/+esm'
+import { ja } from 'https://cdn.jsdelivr.net/npm/date-fns/locale/ja/+esm'
 
 if (location.hostname === '127.0.0.1') {
   htmx.logAll()
@@ -104,8 +105,9 @@ function initHomePage() {
           : baseTime
         return {
           key: date,
-          date: dateFns.format(new Date(date), 'yyyy/M/d'),
+          date: format(new Date(date), 'yyyy/MM/dd'),
           time: time,
+          dayOfWeek: format(new Date(date), 'E', { locale: ja }),
         }
       })
     const renderedTemplate = nunjucks.renderString(template, {

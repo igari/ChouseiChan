@@ -69,6 +69,7 @@
           <li class="flex-justify-between">
             <time datetime="{{c.key}}">
               {{ c.date }}
+              {{ c.dayOfWeek }}
             </time>
             <div>
               <input type="time" value="{{c.time}}" name="candidateTimes[{{c.key}}]" required/>
