@@ -9,6 +9,8 @@ name: Deploy to Live Channel
 jobs:
   deploy_live_website:
     runs-on: ubuntu-latest
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js environment
