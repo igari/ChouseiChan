@@ -516,3 +516,7 @@ export const ogpImage = onRequestWrapper(async (req, res) => {
   res.header('Content-Type', 'image/png')
   res.send(canvas.toBuffer('image/png'))
 })
+
+export const helloHttp = onRequestWrapper(() => {
+  throw new Error('oh, hello there!')
+})
