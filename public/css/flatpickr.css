@@ -7,7 +7,6 @@
   --color-fp-num-input-arrow: rgba(57, 57, 57, 0.6);
   --color-fp-num-input-wrapper-border: rgba(57, 57, 57, 0.15);
   --color-fp-grey-light: #e6e6e6;
-  --color-fp-primary: #4663cb;
   --color-fp-num-input-wrapper-active: rgba(0, 0, 0, 0.2);
   --color-fp-grey-lighter: #eee;
   --color-fp-disabled-day: rgba(57, 57, 57, 0.3);
@@ -40,8 +39,8 @@
   -ms-touch-action: manipulation;
   touch-action: manipulation;
   background: var(--color-fp-white);
-  border: 1px solid var(--border-base, #D6DCDF) !important;
-  background: var(--bg-primary, rgba(255, 255, 255, 0.60)) !important;
+  border: 1px solid var(--border-base, #d6dcdf) !important;
+  background: var(--bg-primary, rgba(255, 255, 255, 0.6)) !important;
   backdrop-filter: blur(2px) !important;
 }
 
@@ -156,7 +155,7 @@
 
 .flatpickr-calendar.arrowTop:before,
 .flatpickr-calendar.arrowTop:after {
-  display: none !important; // override
+  display: none !important;
   bottom: 100%;
 }
 
@@ -670,11 +669,11 @@ span.flatpickr-weekday {
 .flatpickr-day.selected.nextMonthDay,
 .flatpickr-day.startRange.nextMonthDay,
 .flatpickr-day.endRange.nextMonthDay {
-  background: var(--color-fp-primary);
+  background: var(--button-primary);
   -webkit-box-shadow: none;
   box-shadow: none;
   color: var(--color-fp-white);
-  border-color: var(--color-fp-primary);
+  border-color: var(--color-primary);
 }
 
 .flatpickr-day.selected.startRange,
@@ -692,8 +691,8 @@ span.flatpickr-weekday {
 .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n + 1)),
 .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n + 1)),
 .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n + 1)) {
-  -webkit-box-shadow: -10px 0 0 var(--color-fp-primary);
-  box-shadow: -10px 0 0 var(--color-fp-primary);
+  -webkit-box-shadow: -10px 0 0 var(--color-primary);
+  box-shadow: -10px 0 0 var(--color-primary);
 }
 
 .flatpickr-day.selected.startRange.endRange,
@@ -734,11 +733,11 @@ span.flatpickr-weekday {
 .flatpickr-day.week.selected {
   border-radius: 0;
   -webkit-box-shadow:
-    -5px 0 0 var(--color-fp-primary),
-    5px 0 0 var(--color-fp-primary);
+    -5px 0 0 var(--color-primary),
+    5px 0 0 var(--color-primary);
   box-shadow:
-    -5px 0 0 var(--color-fp-primary),
-    5px 0 0 var(--color-fp-primary);
+    -5px 0 0 var(--color-primary),
+    5px 0 0 var(--color-primary);
 }
 
 .flatpickr-day.hidden {
