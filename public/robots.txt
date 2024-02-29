@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /event.html
+Disallow: /edit.html
+Allow: /
+Sitemap: https://itsusuru.com/sitemap.xml
