@@ -20,15 +20,6 @@
     <!-- Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-    <!-- SEO -->
-    <meta name="canonical" content="{{ SITE_ORIGIN }}">
-    <meta name="description" content="{{siteDescription}}">
-
-    <!-- Robots -->
-    {% if noindex | default(false) -%}
-      <meta name="robots" content="noindex, nofollow">
-    {%- endif %}
-
     <!-- Facebook Meta Tags -->
     <meta property="og:url" content="{{ url | default(SITE_ORIGIN) }}">
     <meta property="og:type" content="website">
@@ -59,6 +50,15 @@
 
     <!-- Title -->
     <title>{{ title | default(siteTitle) }}</title>
+
+    <!-- Description -->
+    <meta name="description" content="{{siteDescription}}">
+    <link rel="canonical" href="{{ SITE_ORIGIN }}">
+
+    <!-- Robots -->
+    {% if noindex | default(false) -%}
+      <meta name="robots" content="noindex, nofollow">
+    {%- endif %}
 
     <!-- CSS -->
     <link rel="preconnect" href="https://rsms.me/">
