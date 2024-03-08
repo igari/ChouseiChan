@@ -111,7 +111,9 @@ export const createEvent = onRequestWrapper(async (req, res): Promise<void> => {
 
   const event: EventData = {
     name: data.name,
-    candidateDates: data.candidateDates.split(/\s*,\s*/),
+    candidateDates: data.candidateDates
+      .split(/\s*,\s*/)
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime()),
     candidateTimes: data.candidateTimes || {},
     timeByDay: data.timeByDay === 'on',
     baseTime: data.baseTime || '',
@@ -132,7 +134,9 @@ export const updateEvent = onRequestWrapper(async (req, res): Promise<void> => {
 
   const newEvent: EventData = {
     name: data.name,
-    candidateDates: data.candidateDates.split(/\s*,\s*/),
+    candidateDates: data.candidateDates
+      .split(/\s*,\s*/)
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime()),
     candidateTimes: data.candidateTimes || {},
     timeByDay: data.timeByDay === 'on',
     baseTime: data.baseTime || '',
